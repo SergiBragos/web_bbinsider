@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BBINSIDER – Shot Map</title>
+  <link rel="stylesheet" href="/web/style.css">
+</head>
+<body>
+
+<h1>🏀 BBINSIDER Shot Map</h1>
+
+<form id="shotmap-form">
+  <label>
+    Match IDs (separats per comes):
+    <input type="text" id="match_ids" value="137820745">
+  </label>
+
+  <label>
+    Equip:
+    <select id="team">
+      <option value="home">Home</option>
+      <option value="away">Away</option>
+      <option value="home,away" selected="true">Both</option>
+    </select>
+  </label>
+
+  <label>
+    Jugador (optional):
+    <input type="text" id="player">
+  </label>
+
+  <button type="submit">Generate Shot Map</button>
+</form>
+
+<div id="result">
+  <img id="shotmap-img" alt="Shot map">
+</div>
+
+<script src="/web/script.js"></script>
+</body>
+</html>
+
