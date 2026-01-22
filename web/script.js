@@ -9,11 +9,21 @@ form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const matchIds = document.getElementById("match_ids").value;
+  const team = document.getElementById("team").value;
+  const player = document.getElementById("player").value;
 
-  processMatches(matchIds);
+  let url = `/shotmap?match_ids=${matchIds}&team=${team}`;
+  if (player.trim() !== "") {
+    url += `&player=${encodeURIComponent(player)}`;
+  }
 
+  // 🔥 1️⃣ AQUEST GET ÉS EL QUE ACTIVA EL BACKEND
   img.src = url + "&t=" + Date.now();
+
+  // 🔁 2️⃣ ARA SÍ: barra de progrés per cada partit
+  processMatches(matchIds);
 });
+
 
 
 //Funció que crida a processar els partits d'un en un
