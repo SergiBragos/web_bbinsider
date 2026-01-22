@@ -10,7 +10,7 @@ from core.progress_store import MATCH_PROGRESS
 class GameArgs:
     username = None
     password = None
-    print_events = True
+    print_events = False
     print_stats = False
     save_charts = False
     verify = False

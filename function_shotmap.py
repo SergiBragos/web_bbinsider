@@ -82,9 +82,28 @@ ZONES = {
     "THREE_POINTER_LONG": [Polygon(three_pointer_long)]
 }
 
-# Funció de carregar dades
+# Funció de carregar dades de tirs útils (no faltes ni cap altre esdeveniment)
 def generate_shotmap_data(match_ids, team=("home", "away"), player=None, analysis_zone=None):
     shots = []
+
+    # Si l'equip és "home,away" ho transforma en "home","away" per tl que la funció ho entengui.
+    #Ara passa això:
+    #"home" → ("home",)
+    #"away" → ("away",)
+    #"home,away" → ("home", "away")
+    if isinstance(team, str):
+        team = tuple(t.strip() for t in team.split(","))
+        print("TEAM NORMALIZED FROM STR:", team)
+    elif isinstance(team, list) and len(team) == 1 and "," in team[0]:
+        team = tuple(t.strip() for t in team[0].split(","))
+        print("TEAM NORMALIZED FROM LIST:", team)
+    #El mateix si passes varis match_id. Els normalitza com a tupla d'IDs individuals.
+    if isinstance(match_ids, str):
+        match_ids = tuple(m.strip() for m in match_ids.split(","))
+        print("ID NORMALIZED FROM STR:", match_ids)
+    elif isinstance(match_ids, list) and len(match_ids) == 1 and "," in match_ids[0]:
+        match_ids = tuple(m.strip() for m in match_ids[0].split(","))
+        print("ID NORMALIZED FROM LIST:", match_ids)
     for match_id in match_ids:
         path = Path("matches") / match_id / "shot_events.json"
         with open(path, "r", encoding="utf-8") as f:
@@ -112,6 +131,7 @@ def generate_shotmap_data(match_ids, team=("home", "away"), player=None, analysi
         s["x"], s["y"] = normalize_shot(s["x"], s["y"])
         filtered.append(s)
 
+    print("TOTAL SHOTS LOADED:", len(filtered)) #DEBUG: Mirar si quan l'equip és "home,away" passa tirs
     return zone_stats, filtered
 
 
@@ -168,18 +188,30 @@ def draw_shotmap(zone_stats, shots, show=True, show_individual_shots=False, outp
     plt.close(fig)
 
 
-#Crida a les dues funcions anteriors per generar dades i dibuixar les zones de tir
-def shotmap(
-    match_ids,
-    team=("home", "away"),
-    player=None,
-    analysis_zone=None,
-    show_individual_shots=False,
-    show=True,
-    output_path=None
-):
+#Crida a les dues funcions anteriors per generar dades i dibuixar les zones de tir. És la funció que executa pas per pas tota la resta de l'arxiu!
+def shotmap(match_ids,team,player=None,analysis_zone=None,show_individual_shots=False,show=True,output_path=None):
+
     zone_stats, shots = generate_shotmap_data(match_ids, team, player, analysis_zone)
 
     draw_shotmap(zone_stats,shots,show=show,show_individual_shots=show_individual_shots,output_path=output_path)
 
     return zone_stats
+
+
+
+######
+#DEBUG
+######
+
+if __name__ == "__main__":
+    zone_stats = shotmap(
+        match_ids=["137821934", "137821973"],
+        team="home,away",
+        player="Constantí Sucarrats",
+        show_individual_shots=True,
+        show=True
+    )
+
+    print("ZONE STATS:")
+    for zone, stats in zone_stats.items():
+        print(zone, stats)

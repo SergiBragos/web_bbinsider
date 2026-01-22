@@ -61,7 +61,7 @@ def analyze_shots(game_id):
   
   input_file = Path(f"./matches/{game_id}/game.json")
   with input_file.open(encoding="utf8") as f:
-    data = json.load(f) 
+    data = json.load(f)
 
   for index, player in enumerate(data["teamHome"]["players"]):
     number = index + 1

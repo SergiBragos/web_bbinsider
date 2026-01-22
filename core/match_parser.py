@@ -87,6 +87,7 @@ def parse_report(report: str, at: Team, ht: Team) -> list[BBEvent]:
     return events
 
 
+
 def parse_xml(text: str):
     root = XML.fromstring(text)
 

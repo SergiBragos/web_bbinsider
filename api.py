@@ -38,7 +38,7 @@ def get_shotmap(match_ids: str, team: str, player: str | None = None):
 
     shotmap(
         match_ids=match_list,
-        team=(team,),
+        team=team,
         player=player,
         output_path=output,
         show=False
@@ -46,9 +46,18 @@ def get_shotmap(match_ids: str, team: str, player: str | None = None):
 
     return FileResponse(output, media_type="image/png")
 
-from fastapi import FastAPI
 
 @app.get("/progress/{match_id}")
 def get_progress(match_id: str):
     progress = MATCH_PROGRESS.get(match_id, 0)
     return {"progress": progress}
+
+
+######
+#DEBUG
+######
+
+if __name__ == "__main__":
+    print(
+        get_shotmap(match_ids="137821934,137821973",team="home,away",player="Constantí Sucarrats")
+    )
