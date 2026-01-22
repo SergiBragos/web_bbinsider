@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Entorns virtuals
+.venv/
+venv/
+
+# Fitxers temporals
+*.log
+tmp/
+*.tmp
+
+#Partits guardats personalment
+matches/
+
+# Matplotlib / imatges generades
+*.png
+
+# VS Code
+.vscode/
+
+# Sistemes
+.DS_Store
+Thumbs.db
