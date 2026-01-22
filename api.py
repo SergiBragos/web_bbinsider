@@ -5,6 +5,8 @@ from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 from function_shotmap import shotmap
 from core.match_processor import ensure_match_processed
+from core.progress_store import MATCH_PROGRESS
+from typing import Dict
 
 app = FastAPI()
 
@@ -43,3 +45,10 @@ def get_shotmap(match_ids: str, team: str, player: str | None = None):
     )
 
     return FileResponse(output, media_type="image/png")
+
+from fastapi import FastAPI
+
+@app.get("/progress/{match_id}")
+def get_progress(match_id: str):
+    progress = MATCH_PROGRESS.get(match_id, 0)
+    return {"progress": progress}
