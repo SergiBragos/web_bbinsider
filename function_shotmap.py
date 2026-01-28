@@ -169,7 +169,7 @@ def draw_shotmap(zone_stats, shots, show=True, show_individual_shots=False, outp
             else:
                 shape.set_alpha(0.1)
                 shape.set_facecolor((0, 0, 1))
-                ax.text(cx, cy, f"{made}/{attempts})",
+                ax.text(cx, cy, f"{made}/{attempts}",
                 fontsize=7, ha="center", va="center")
             ax.add_patch(shape)
 
