@@ -56,7 +56,7 @@ def mirrory(points, center_y=96):
     """Simetria respecte eix horitzontal"""
     return [(x, 2 * center_y - y) for x, y in points]
 
-
+#Punts que conformen els polígons de les zones de tir. Els que passen per l'eix longitudinal de la pista han de ser simètrics i si se'n canvia una coordenada s'ha de canviar la de l'altre costat.
 dunk = [(16,128),(30,128),(46,116),(52,96),(46,76),(30,64),(16,64)]
 paint_shot = [(16,128),(16,146),(40,142),(56,130),(70,112),(70,80),(56,62),(40,50),(16,46),(16,64),(30,64),(46,76),(52,96),(46,116),(30,128)]
 two_pointer_baseline = [(0,128),(16,128),(16,180),(0,180)]
@@ -98,6 +98,14 @@ def generate_shotmap_data(match_ids, team=("home", "away"), player=None, analysi
 
     zone_stats = defaultdict(lambda: {"attempts": 0, "made": 0})
     filtered = []
+    MADE_RESULTS = ("scored", "scored_foul", "goaltend")
+
+    assisted = {
+        "a2": [0, 0],  # made, attempts
+        "u2": [0, 0],
+        "a3": [0, 0],
+        "u3": [0, 0],
+    }
 
     for s in shots:
         if team and s["team"] not in team:
@@ -111,15 +119,28 @@ def generate_shotmap_data(match_ids, team=("home", "away"), player=None, analysi
         if not zone or (analysis_zone and zone != analysis_zone):
             continue
 
+        # --- zone stats ---
         zone_stats[zone]["attempts"] += 1
-        if s["result"] in ("scored", "scored_foul"):
+        if s["result"] in MADE_RESULTS:
             zone_stats[zone]["made"] += 1
 
         s["x"], s["y"] = normalize_shot(s["x"], s["y"])
         filtered.append(s)
 
-    print("TOTAL SHOTS LOADED:", len(filtered)) #DEBUG: Mirar si quan l'equip és "home,away" passa tirs
-    return zone_stats, filtered
+        # --- assisted study ---
+        is_three = s["shotType"].startswith("THREE_POINTER")
+        key = (
+            ("a3" if is_three else "a2")
+            if s["assisted"]
+            else ("u3" if is_three else "u2")
+        )
+
+        assisted[key][1] += 1  # attempt
+        if s["result"] in MADE_RESULTS:
+            assisted[key][0] += 1  # made
+    
+    
+    return zone_stats, filtered, assisted
 
 
 # Funció de dibuix dels tirs
@@ -190,11 +211,11 @@ def draw_shotmap(zone_stats, shots, show=True, show_individual_shots=False, outp
 #Crida a les dues funcions anteriors per generar dades i dibuixar les zones de tir. És la funció que executa pas per pas tota la resta de l'arxiu!
 def shotmap(match_ids,team,player=None,analysis_zone=None,show_individual_shots=False,show=True,output_path=None):
 
-    zone_stats, shots = generate_shotmap_data(match_ids, team, player, analysis_zone)
+    zone_stats, shots, assisted = generate_shotmap_data(match_ids, team, player, analysis_zone)
 
     draw_shotmap(zone_stats,shots,show=show,show_individual_shots=show_individual_shots,output_path=output_path)
 
-    return zone_stats
+    return zone_stats, assisted
 
 
 
@@ -203,7 +224,7 @@ def shotmap(match_ids,team,player=None,analysis_zone=None,show_individual_shots=
 ######
 
 if __name__ == "__main__":
-    zone_stats = shotmap(
+    zone_stats, assisted = shotmap(
         match_ids="137869361,137869372",
         team="home,away",
         player="Constantí Sucarrats",
@@ -214,3 +235,4 @@ if __name__ == "__main__":
     print("ZONE STATS:")
     for zone, stats in zone_stats.items():
         print(zone, stats)
+    print(assisted)

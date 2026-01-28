@@ -37,8 +37,7 @@ app.add_middleware(
 def get_shotmap(match_ids: str,
                 team: str,
                 show_individual_shots: bool = False,
-                player: str | None = None
-                ):
+                player: str | None = None):
 
     match_list = match_ids.split(",")
 
@@ -47,7 +46,7 @@ def get_shotmap(match_ids: str,
 
     output = "tmp/shotmap.png"
 
-    shotmap(
+    zone_stats, assisted = shotmap(
         match_ids=match_list,
         team=team,
         player=player,
@@ -57,6 +56,26 @@ def get_shotmap(match_ids: str,
     )
 
     return FileResponse(output, media_type="image/png")
+
+@app.get("/assisted")
+def get_assisted(
+    match_ids: str,
+    team: str,
+    player: str | None = None):
+
+    match_list = match_ids.split(",")
+
+    for mid in match_list:
+        ensure_match_processed(mid.strip(), team)
+
+    zone_stats, assisted = shotmap(
+        match_ids=match_list,
+        team=team,
+        player=player,
+        show=False
+    )
+
+    return assisted
 
 
 @app.get("/progress/{match_id}")
@@ -71,5 +90,6 @@ def get_progress(match_id: str):
 
 if __name__ == "__main__":
     print(
-        get_shotmap(match_ids="137869361,137869372",team="home,away",player="Constantí Sucarrats")
+        get_shotmap(match_ids="137869361,137869372",team="home,away",player="Constantí Sucarrats"),
+        get_assisted(match_ids="137869361,137869372",team="home,away",player="Constantí Sucarrats")
     )

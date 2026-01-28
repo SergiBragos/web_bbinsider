@@ -64,8 +64,37 @@ button:hover {
   border-radius: 6px;
 }
 
+.assisted-table {
+  border-collapse: collapse;
+  margin-top: 15px;
+  width: 100%;
+  font-size: 14px;
+  padding: 20px;
+}
+
+.assisted-table th,
+.assisted-table td {
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+  text-align: center;
+}
+
+.assisted-table th {
+  background-color: #747474;
+  font-weight: bold;
+}
+
+.assisted-table tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.assisted-table tr:nth-child(odd) {
+  color: #fafafa;
+}
+
+
 /* -----------------------------
-   PROGRESS BAR CONTAINER
+   PROGRESS BAR
 ------------------------------ */
 #progress-container {
   width: 50%;
@@ -76,9 +105,6 @@ button:hover {
   transition: opacity 0.3s ease, height 0.3s ease;
 }
 
-/* -----------------------------
-   PROGRESS BAR FILL
------------------------------- */
 #progress-bar {
   height: 20px;
   background: linear-gradient(90deg, #4caf50, #66bb6a);

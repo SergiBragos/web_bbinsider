@@ -2,7 +2,7 @@ const form = document.getElementById("shotmap-form");
 const img = document.getElementById("shotmap-img");
 const progressContainer = document.getElementById("progress-container");
 const progressBar = document.getElementById("progress-bar");
-
+const assistedDiv = document.getElementById("assisted-stats");
 
 //Execució quan s'activa el botó de submit
 form.addEventListener("submit", async (e) => {
@@ -12,15 +12,28 @@ form.addEventListener("submit", async (e) => {
   const team = document.getElementById("team").value;
   const player = document.getElementById("player").value;
   const showIndividualShots = document.getElementById("show-ind-shots").checked;
+
   let url = `/shotmap?match_ids=${matchIds}&team=${team}&show_individual_shots=${showIndividualShots}`;
   if (player.trim() !== "") {
     url += `&player=${encodeURIComponent(player)}`;
   }
-  
-  // 🔥 1️⃣ AQUEST GET ÉS EL QUE ACTIVA EL BACKEND
+
+  // 1️⃣ AQUEST GET ÉS EL QUE ACTIVA EL BACKEND
   img.src = url + "&t=" + Date.now();
 
-  // 🔁 2️⃣ ARA SÍ: barra de progrés per cada partit
+    // 2️⃣ JSON (fetch)
+  
+  let url_ass = `/assisted?match_ids=${matchIds}&team=${team}`
+  if (player.trim() !== "") {
+    url_ass += `&player=${encodeURIComponent(player)}`;
+  }
+  const res = await fetch(url_ass);
+  const data = await res.json();
+
+  // Renderitzar el diccionari d'assistències l qui hem anomenat data
+  renderAssistedStats(data);
+  
+  // 3: barra de progrés per cada partit
   processMatches(matchIds);
 });
 
@@ -35,6 +48,48 @@ async function processMatches(matchIds) {
   }
 }
 
+// Funció que renderitza el diccionari d'assistències
+function renderAssistedStats(assisted) {
+
+  assistedDiv.innerHTML = `
+    <table class="assisted-table">
+      <thead>
+        <tr>
+          <th>Shot Type</th>
+          <th>Made</th>
+          <th>Attempts</th>
+          <th>%</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Assisted 2P</td>
+          <td>${assisted.a2[0]}</td>
+          <td>${assisted.a2[1]}</td>
+          <td>${(assisted.a2[0] / Math.max(1, assisted.a2[1]) * 100).toFixed(1)}%</td>
+        </tr>
+        <tr>
+          <td>Unassisted 2P</td>
+          <td>${assisted.u2[0]}</td>
+          <td>${assisted.u2[1]}</td>
+          <td>${(assisted.u2[0] / Math.max(1, assisted.u2[1]) * 100).toFixed(1)}%</td>
+        </tr>
+        <tr>
+          <td>Assisted 3P</td>
+          <td>${assisted.a3[0]}</td>
+          <td>${assisted.a3[1]}</td>
+          <td>${(assisted.a3[0] / Math.max(1, assisted.a3[1]) * 100).toFixed(1)}%</td>
+        </tr>
+        <tr>
+          <td>Unassisted 3P</td>
+          <td>${assisted.u3[0]}</td>
+          <td>${assisted.u3[1]}</td>
+          <td>${(assisted.u3[0] / Math.max(1, assisted.u3[1]) * 100).toFixed(1)}%</td>
+        </tr>
+      </tbody>
+    </table>
+  `;
+}
 
 //Barra de progrés que va creixent per a cada partit
 function pollSingleMatch(matchId) {
