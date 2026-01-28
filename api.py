@@ -25,7 +25,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
+# When the submit button is pressed, the HTML form is intercepted by JavaScript.
+# The JavaScript code manually builds a URL (e.g. /shotmap?match_ids=...&team=...)
+# and triggers a GET request to that endpoint.
+#
+# Because the request is sent to /shotmap, this FastAPI route is executed.
+# If another button or action is needed (e.g. rebounds, assists),
+# a different endpoint must be created (e.g. /rebounds) and called explicitly
+# from JavaScript.
 @app.get("/shotmap")
 def get_shotmap(match_ids: str,
                 team: str,
