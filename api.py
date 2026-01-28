@@ -27,7 +27,11 @@ app.add_middleware(
 
 
 @app.get("/shotmap")
-def get_shotmap(match_ids: str, team: str, player: str | None = None):
+def get_shotmap(match_ids: str,
+                team: str,
+                show_individual_shots: bool = False,
+                player: str | None = None
+                ):
 
     match_list = match_ids.split(",")
 
@@ -41,6 +45,7 @@ def get_shotmap(match_ids: str, team: str, player: str | None = None):
         team=team,
         player=player,
         output_path=output,
+        show_individual_shots=show_individual_shots,
         show=False
     )
 

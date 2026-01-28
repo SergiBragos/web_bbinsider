@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>BBINSIDER – Shot Map</title>
+  <title>BBINSIDER - Shot Map</title>
   <link rel="stylesheet" href="/web/style.css">
 </head>
 <body>
 
-<h1>🏀 BBINSIDER Shot Map</h1>
+<h1>BBinsider Shot Map</h1>
 
 <form id="shotmap-form">
   <label>
     Match IDs (separats per comes):
-    <input type="text" id="match_ids" value="137820745">
+    <input type="text" id="match_ids" value="137869361,137869372">
   </label>
 
   <label>
@@ -29,7 +29,11 @@
     <input type="text" id="player">
   </label>
 
+  <input type="checkbox" id="show-ind-shots">
+  <label for="show-ind-shots"> Show individual shots</label>
+
   <button type="submit">Generate Shot Map</button>
+
 </form>
 
 <div id="progress-container" class="inactive">

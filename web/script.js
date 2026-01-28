@@ -11,12 +11,12 @@ form.addEventListener("submit", async (e) => {
   const matchIds = document.getElementById("match_ids").value;
   const team = document.getElementById("team").value;
   const player = document.getElementById("player").value;
-
-  let url = `/shotmap?match_ids=${matchIds}&team=${team}`;
+  const showIndividualShots = document.getElementById("show-ind-shots").checked;
+  let url = `/shotmap?match_ids=${matchIds}&team=${team}&show_individual_shots=${showIndividualShots}`;
   if (player.trim() !== "") {
     url += `&player=${encodeURIComponent(player)}`;
   }
-
+  
   // 🔥 1️⃣ AQUEST GET ÉS EL QUE ACTIVA EL BACKEND
   img.src = url + "&t=" + Date.now();
 

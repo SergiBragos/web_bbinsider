@@ -62,25 +62,12 @@ paint_shot = [(16,128),(16,146),(40,142),(56,130),(70,112),(70,80),(56,62),(40,5
 two_pointer_baseline = [(0,128),(16,128),(16,180),(0,180)]
 two_pointer_wing = [(16,146),(40,142),(56,130),(92,154),(70,172),(52,180),(16,180)]
 two_pointer_elbow = [(56,130),(92,154),(100,142),(104,132),(70,112)]
-two_pointer_topkey = [(70,112),(104,132),(110,118),(113,96),(110,74),(104,60),(70,80)]
+two_pointer_topkey = [(70,112),(104,132),(110,118),(116,96),(110,74),(104,60),(70,80)]
 three_pointer_corner = [(0,180),(30,180),(30,192),(0,192)]
 three_pointer_wing = [(30,180),(52,180),(70,172),(92,154),(100,142),(118,152),(78,192),(30,192)]
 three_pointer_topkey = [(100,142),(118,152),(132,116),(112,112),(110,118)]
-three_pointer_long = [(120, 96),(120, 114),(132, 116),(118, 152),(78, 192),(110, 192),(152, 120),(152, 72),(110, 0),(78, 0),(118, 40),(132, 76),(120, 78)]
+three_pointer_long = [(120, 96),(120, 114),(132, 116),(118, 152),(78, 192),(130, 192),(152, 120),(152, 72),(130, 0),(78, 0),(118, 40),(132, 76),(120, 78)]
 
-
-ZONES = {
-    "DUNK": [Polygon(dunk)],
-    "PAINT_SHOT": [Polygon(paint_shot)],
-    "TWO_POINTER_BASELINE": [Polygon(two_pointer_baseline), Polygon(mirrory(two_pointer_baseline))],
-    "TWO_POINTER_WING": [Polygon(two_pointer_wing), Polygon(mirrory(two_pointer_wing))],
-    "TWO_POINTER_ELBOW": [Polygon(two_pointer_elbow), Polygon(mirrory(two_pointer_elbow))],
-    "TWO_POINTER_TOPKEY": [Polygon(two_pointer_topkey)],
-    "THREE_POINTER_TOPKEY": [Polygon(three_pointer_topkey), Polygon(mirrory(three_pointer_topkey))],
-    "THREE_POINTER_WING": [Polygon(three_pointer_wing), Polygon(mirrory(three_pointer_wing))],
-    "THREE_POINTER_CORNER": [Polygon(three_pointer_corner), Polygon(mirrory(three_pointer_corner))],
-    "THREE_POINTER_LONG": [Polygon(three_pointer_long)]
-}
 
 # Funció de carregar dades de tirs útils (no faltes ni cap altre esdeveniment)
 def generate_shotmap_data(match_ids, team=("home", "away"), player=None, analysis_zone=None):
@@ -161,23 +148,35 @@ def draw_shotmap(zone_stats, shots, show=True, show_individual_shots=False, outp
         pct = made / attempts if attempts else 0
 
         for shape in shapes:
-            shape.set_edgecolor("black")
-            shape.set_alpha(0.7)
-            shape.set_facecolor((1 - pct, pct, 0))
-            ax.add_patch(shape)
 
             pts = shape.get_xy()
             cx, cy = pts[:, 0].mean(), pts[:, 1].mean()
             if zone_name == "PAINT_SHOT":
                 cx, cy = 60, 96
+            elif zone_name == "THREE_POINTER_WING":
+                cx, cy = 84,18
+            elif zone_name == "THREE_POINTER_LONG":
+                cx, cy = 140,96
+            elif zone_name == "THREE_POINTER_TOPKEY":
+                cx, cy = 116,60
 
-        ax.text(cx, cy, f"{made}/{attempts}\n({pct:.1%})",
+            shape.set_edgecolor("black")
+            if attempts > 0:
+                shape.set_alpha(0.8)
+                shape.set_facecolor((1 - pct, pct, 0))
+                ax.text(cx, cy, f"{made}/{attempts}\n({pct:.1%})",
                 fontsize=8, ha="center", va="center")
+            else:
+                shape.set_alpha(0.1)
+                shape.set_facecolor((0, 0, 1))
+                ax.text(cx, cy, f"{made}/{attempts})",
+                fontsize=7, ha="center", va="center")
+            ax.add_patch(shape)
 
     if show_individual_shots:
         for s in shots:
             color = "green" if s["result"] == "scored" else "red"
-            ax.scatter(s["x"], s["y"], s=20, c=color, alpha=0.7)
+            ax.scatter(s["x"], s["y"], s=20, c=color, alpha=0.7, edgecolors="black")
 
     if output_path:
         plt.savefig(output_path, dpi=200, bbox_inches="tight")
@@ -205,7 +204,7 @@ def shotmap(match_ids,team,player=None,analysis_zone=None,show_individual_shots=
 
 if __name__ == "__main__":
     zone_stats = shotmap(
-        match_ids=["137821934", "137821973"],
+        match_ids="137869361,137869372",
         team="home,away",
         player="Constantí Sucarrats",
         show_individual_shots=True,
