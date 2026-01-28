@@ -56,7 +56,7 @@ function renderAssistedStats(assisted) {
       <thead>
         <tr>
           <th>Shot Type</th>
-          <th>Made</th>
+          <th>Scored</th>
           <th>Attempts</th>
           <th>%</th>
         </tr>

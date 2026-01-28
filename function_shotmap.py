@@ -144,9 +144,17 @@ def generate_shotmap_data(match_ids, team=("home", "away"), player=None, analysi
 
 
 # Funció de dibuix dels tirs
-def draw_shotmap(zone_stats, shots, show=True, show_individual_shots=False, output_path=None):
+def draw_shotmap(zone_stats, shots, show=True, show_individual_shots=False, output_path=None, player=None, team=None):
     court = Image.open("halfcourt.png")
     fig, ax = plt.subplots(figsize=(10, 5))
+    
+    ax.set_title(
+    f"Shot Map – {player} ({team})",
+    fontsize=14,
+    fontweight="bold",
+    pad=12
+)
+
     ax.imshow(court)
     ax.axis("off")
     ZONES = {
@@ -168,7 +176,7 @@ def draw_shotmap(zone_stats, shots, show=True, show_individual_shots=False, outp
         attempts, made = stats["attempts"], stats["made"]
         pct = made / attempts if attempts else 0
 
-        for shape in shapes:
+        for shape in shapes[0]:
 
             pts = shape.get_xy()
             cx, cy = pts[:, 0].mean(), pts[:, 1].mean()
@@ -181,7 +189,8 @@ def draw_shotmap(zone_stats, shots, show=True, show_individual_shots=False, outp
             elif zone_name == "THREE_POINTER_TOPKEY":
                 cx, cy = 116,60
 
-            shape.set_edgecolor("black")
+            shape.set_edgecolor("white")
+
             if attempts > 0:
                 shape.set_alpha(0.8)
                 shape.set_facecolor((1 - pct, pct, 0))
@@ -213,7 +222,7 @@ def shotmap(match_ids,team,player=None,analysis_zone=None,show_individual_shots=
 
     zone_stats, shots, assisted = generate_shotmap_data(match_ids, team, player, analysis_zone)
 
-    draw_shotmap(zone_stats,shots,show=show,show_individual_shots=show_individual_shots,output_path=output_path)
+    draw_shotmap(zone_stats,shots,show=show,show_individual_shots=show_individual_shots,output_path=output_path, player=player, team=team)
 
     return zone_stats, assisted
 
@@ -227,7 +236,7 @@ if __name__ == "__main__":
     zone_stats, assisted = shotmap(
         match_ids="137869361,137869372",
         team="home,away",
-        player="Constantí Sucarrats",
+        player="Vassilis Tasopoulos",
         show_individual_shots=True,
         show=True
     )
