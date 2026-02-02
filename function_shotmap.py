@@ -176,7 +176,7 @@ def draw_shotmap(zone_stats, shots, show=True, show_individual_shots=False, outp
         attempts, made = stats["attempts"], stats["made"]
         pct = made / attempts if attempts else 0
 
-        for shape in shapes[0]:
+        for shape in shapes:
 
             pts = shape.get_xy()
             cx, cy = pts[:, 0].mean(), pts[:, 1].mean()
@@ -234,10 +234,10 @@ def shotmap(match_ids,team,player=None,analysis_zone=None,show_individual_shots=
 
 if __name__ == "__main__":
     zone_stats, assisted = shotmap(
-        match_ids="137869361,137869372",
+        match_ids="137869361,137869372,137866459",
         team="home,away",
-        player="Vassilis Tasopoulos",
-        show_individual_shots=True,
+        player=None,
+        show_individual_shots=False,
         show=True
     )
 
