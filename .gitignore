@@ -12,8 +12,9 @@ venv/
 tmp/
 *.tmp
 
-#Partits guardats personalment
+#Partits i equips guardats personalment
 matches/
+teams/
 
 # Matplotlib / imatges generades
 *.png

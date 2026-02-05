@@ -90,6 +90,6 @@ def get_progress(match_id: str):
 
 if __name__ == "__main__":
     print(
-        get_shotmap(match_ids="137869361,137869372",team="home,away",player="Constantí Sucarrats"),
-        get_assisted(match_ids="137869361,137869372",team="home,away",player="Constantí Sucarrats")
+        get_shotmap(match_ids="137869361,137869372,137869379,137866459,138565399,137869386",team="home,away",player="Constantí Sucarrats"),
+        get_assisted(match_ids="137869361,137869372,137869379,137866459,138565399,137869386",team="home,away",player="Constantí Sucarrats")
     )

@@ -234,7 +234,7 @@ def shotmap(match_ids,team,player=None,analysis_zone=None,show_individual_shots=
 
 if __name__ == "__main__":
     zone_stats, assisted = shotmap(
-        match_ids="137869361,137869372,137866459",
+        match_ids="137869361,137869372,137869379,137866459,138565399,137869386,138575695",
         team="home,away",
         player=None,
         show_individual_shots=False,

@@ -25,7 +25,7 @@ class Network:
 class BBApi:
     def __init__(self, login=None, password=None):
         if login is None or password is None:
-            return
+            raise ValueError("Login i password obligatoris")
 
         self.login = login
         self.password = password
@@ -33,18 +33,20 @@ class BBApi:
         self.network = Network()
 
         p = {"login": self.login, "code": self.password}
-        data = self.network.first_get("http://bbapi.buzzerbeater.com/login.aspx", p)
+        data = self.network.first_get(
+            "http://bbapi.buzzerbeater.com/login.aspx", p
+        )
 
         root = xml.fromstring(data)
-        if root.tag == "bbapi":
-            if root.attrib["version"] != "1":
-                print("Error: Invalid BBApi Version!")
 
         for child in root:
             if child.tag == "loggedIn":
                 self.logged_in = True
             elif child.tag == "error":
-                print("Error:", child.attrib["message"])
+                raise RuntimeError(f"BBAPI login error: {child.attrib['message']}")
+
+        if not self.logged_in:
+            raise RuntimeError("Login BBAPI fallit")
 
     def arena(self, teamid=0):
         p = {"teamid": teamid}
@@ -77,7 +79,7 @@ class BBApi:
 
     def get_xml_boxscore(self, matchid) -> str:
 
-        path = f"matches/boxscore_{matchid}.xml"
+        path = f"teams/boxscore_{matchid}.xml"
 
         if exists(path):
             with open(path, mode="r", encoding='utf-8') as f:
@@ -93,7 +95,7 @@ class BBApi:
 
     def get_xml_standings(self, leagueid: int, season: int) -> str:
 
-        path = f"matches/standings_{leagueid}_{season}.xml"
+        path = f"teams/standings_{leagueid}_{season}.xml"
 
         if exists(path):
             with open(path, mode="r", encoding='utf-8') as f:
@@ -108,20 +110,24 @@ class BBApi:
             return text
 
     def get_xml_schedule(self, teamid, season) -> str:
-
-        path = f"matches/schedule_{teamid}_{season}.xml"
+        path = f"teams/schedule_{teamid}_{season}.xml"
 
         if exists(path):
-            with open(path, mode="r", encoding='utf-8') as f:
+            with open(path, mode="r", encoding="utf-8") as f:
                 return f.read()
-        else:
-            p = {"teamid": teamid, "season": season}
-            text = self.network.get("http://bbapi.buzzerbeater.com/schedule.aspx", p)
 
-            with open(path, mode="w", encoding='utf-8') as f:
-                f.write(text)
+        p = {"teamid": teamid, "season": season}
+        text = self.network.get(
+            "http://bbapi.buzzerbeater.com/schedule.aspx", p
+        )
 
-            return text
+        if "<schedule" not in text:
+            raise RuntimeError("Resposta schedule NO conté <schedule>")
+
+        with open(path, mode="w", encoding="utf-8") as f:
+            f.write(text)
+
+        return text
 
     def player(self, playerid) -> str:
         p = {"playerid": playerid}
@@ -251,15 +257,18 @@ class BBApi:
 
     def schedule(self, team_id, season):
         data = self.get_xml_schedule(team_id, season)
-
         root = xml.fromstring(data)
-        matches = root.findall("./schedule/match")
 
-        match_ids = [
-            match.attrib["id"]
-            for match in matches
-            if match.attrib["type"].startswith("league")
-        ]
+        schedule = root.find("schedule")
+        if schedule is None:
+            raise RuntimeError("No s'ha trobat <schedule>")
+
+        matches = schedule.findall("match")
+        match_ids={}
+        print(f"Matches trobats: {len(matches)}")
+
+        for m in matches:
+            match_ids[m.attrib["id"]] = [m.attrib["type"], m.attrib["start"]]
 
         return match_ids
 
@@ -317,16 +326,13 @@ def prefetch_data(
 
 
 if __name__ == "__main__":
-    import argparse
+    api = BBApi("bragoss", "buzzermanager")
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--username", required=True)
-    parser.add_argument("--password", required=True)
-    parser.add_argument("--leagueid", type=int, required=True)
-    parser.add_argument("--season-from", type=int, required=True)
-    parser.add_argument("--season-to", type=int, required=True)
-    args = parser.parse_args()
+    team_id = "138045"
+    season = "71"
 
-    prefetch_data(
-        args.username, args.password, args.leagueid, args.season_from, args.season_to
-    )
+    match_ids = api.schedule(team_id, season)
+
+    print("\nMATCH IDS (league):")
+    print(match_ids)
+    print(f"\nTotal matches: {len(match_ids)}")
