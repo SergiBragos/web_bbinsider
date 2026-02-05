@@ -1,8 +1,12 @@
+//script.js
+
 const form = document.getElementById("shotmap-form");
 const img = document.getElementById("shotmap-img");
 const progressContainer = document.getElementById("progress-container");
 const progressBar = document.getElementById("progress-bar");
 const assistedDiv = document.getElementById("assisted-stats");
+// Estat global dels partits seleccionats
+const selectedMatches = new Set();
 
 //Execució quan s'activa el botó de submit
 form.addEventListener("submit", async (e) => {
@@ -36,7 +40,6 @@ form.addEventListener("submit", async (e) => {
   // 3: barra de progrés per cada partit
   processMatches(matchIds);
 });
-
 
 
 //Funció que crida a processar els partits d'un en un
@@ -116,4 +119,49 @@ function pollSingleMatch(matchId) {
       }
     }, 400);
   });
+}
+
+
+//Funció que carrega el calendari d'un equip
+async function loadSchedule() {
+  const teamid = document.getElementById("teamid").value;
+  const season = document.getElementById("season").value;
+  const matchesContainer = document.getElementById("matches");
+
+  matchesContainer.innerHTML = "Loading...";
+
+  const res = await fetch(`/api/schedule?teamid=${teamid}&season=${season}`);
+  const data = await res.json();
+
+  matchesContainer.innerHTML = "";
+
+  data.forEach(m => {
+    const btn = document.createElement("button");
+    btn.className = "match-btn";
+
+    const date = new Date(m.date).toLocaleDateString();
+    btn.textContent = `${date} · ${m.type} · ${m.match_id}`;
+
+    btn.onclick = () => loadMatch(m.match_id, btn);
+
+    matchesContainer.appendChild(btn);
+  });
+}
+
+function loadMatch(matchId, button) {
+  if (selectedMatches.has(matchId)) {
+    // 🔴 deseleccionar
+    selectedMatches.delete(matchId);
+    button.classList.remove("selected");
+  } else {
+    // 🟢 seleccionar
+    selectedMatches.add(matchId);
+    button.classList.add("selected");
+  }
+
+  // Actualitzar el camp hidden/input
+  document.getElementById("match_ids").value =
+    Array.from(selectedMatches).join(",");
+
+  console.log("Selected matches:", Array.from(selectedMatches));
 }

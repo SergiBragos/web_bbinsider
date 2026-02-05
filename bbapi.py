@@ -6,7 +6,7 @@ from team import Team
 from player import Player
 from stats import *
 from os.path import exists
-
+import password
 
 class Network:
     def __init__(self):
@@ -109,6 +109,7 @@ class BBApi:
 
             return text
 
+    #Va a buscar els partits a l'enllaç http://bbapi.buzzerbeater.com/schedule.aspx, amb team_id i season.
     def get_xml_schedule(self, teamid, season) -> str:
         path = f"teams/schedule_{teamid}_{season}.xml"
 
@@ -117,9 +118,7 @@ class BBApi:
                 return f.read()
 
         p = {"teamid": teamid, "season": season}
-        text = self.network.get(
-            "http://bbapi.buzzerbeater.com/schedule.aspx", p
-        )
+        text = self.network.get("http://bbapi.buzzerbeater.com/schedule.aspx", p)
 
         if "<schedule" not in text:
             raise RuntimeError("Resposta schedule NO conté <schedule>")
@@ -255,6 +254,7 @@ class BBApi:
 
         return team_ids
 
+    # Això no busca els partits, només representa com a diccionari els partits que busca la funció get_xml_schedule
     def schedule(self, team_id, season):
         data = self.get_xml_schedule(team_id, season)
         root = xml.fromstring(data)
@@ -326,7 +326,7 @@ def prefetch_data(
 
 
 if __name__ == "__main__":
-    api = BBApi("bragoss", "buzzermanager")
+    api = BBApi(password.user, password.password)
 
     team_id = "138045"
     season = "71"

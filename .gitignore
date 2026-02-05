@@ -25,3 +25,6 @@ teams/
 # Sistemes
 .DS_Store
 Thumbs.db
+
+# Contrasenyes
+password.py

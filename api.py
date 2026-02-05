@@ -1,14 +1,21 @@
+# api.py
+
 from fastapi import FastAPI, Query
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+import xml.etree.ElementTree as xml
 from pathlib import Path
 from function_shotmap import shotmap
 from core.match_processor import ensure_match_processed
+from bbapi import BBApi
 from core.progress_store import MATCH_PROGRESS
 from typing import Dict
+import password
+
 
 app = FastAPI()
+bbapi_schedule = BBApi(password.user, password.password)
 
 app.mount("/web", StaticFiles(directory="web"), name="web")
 
@@ -82,6 +89,24 @@ def get_assisted(
 def get_progress(match_id: str):
     progress = MATCH_PROGRESS.get(match_id, 0)
     return {"progress": progress}
+
+
+
+@app.get("/api/schedule")
+def api_schedule(teamid: str = Query(...), season: str = Query(...)):
+    xml_text = bbapi_schedule.get_xml_schedule(teamid, season)
+    root = xml.fromstring(xml_text)
+
+    matches = []
+
+    for m in root.findall("./schedule/match"):
+        matches.append({
+            "match_id": m.attrib["id"],
+            "type": m.attrib.get("type", "unknown"),
+            "date": m.attrib.get("start")
+        })
+
+    return matches
 
 
 ######

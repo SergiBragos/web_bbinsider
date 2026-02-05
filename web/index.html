@@ -7,48 +7,70 @@
 </head>
 <body>
 
-<h1>BuzzerCheater</h1>
 
-<form id="shotmap-form">
-  <label>
-    Match IDs (separats per comes):
-    <input type="text" id="match_ids" value="137869361,137869372">
-  </label>
+<div id="sidebar">
+  <h1>BuzzerCheater</h1>
+  <h3>Calendari</h3>
+  <div class="container">
+    <label>Team ID</label><br>
+    <input id="teamid" type="text" value="138045"><br><br>
 
-  <label>
-    Equip:
-    <select id="team">
-      <option value="home">Home</option>
-      <option value="away">Away</option>
-      <option value="home,away" selected="true">Home & Away</option>
-    </select>
-  </label>
+    <label>Season</label><br>
+    <input id="season" type="number" value="71"><br><br>
 
-  <label>
-    Jugador (optional):
-    <input type="text" id="player">
-  </label>
+    <button onclick="loadSchedule()">Load schedule</button>
 
-  <input type="checkbox" id="show-ind-shots">
-  <label for="show-ind-shots"> Show individual shots</label>
-
-  <button type="submit">Watch stats</button>
-
-</form>
-
-<div id="progress-container" class="inactive">
-  <div id="progress-bar"
-       style="width:0%; height:20px; background:#4caf50; color:white; text-align:center;">
-    0%
+    <hr>
+    <div id="matches"></div>
   </div>
 </div>
 
+<div id="main-screen">
+  <h3>Mapa de tirs</h3>
+  <div class="container">
 
-<div id="result">
-  <h3>Shot map</h3>
-  <img id="shotmap-img" alt="Shot map">
-  <h3>Assisted vs Unassisted shots</h3>
-  <div id="assisted-stats"></div>
+    <form id="shotmap-form">
+      <label>
+        Match IDs (separats per comes):
+        <input type="text" id="match_ids">
+      </label>
+
+      <label>
+        Equip:
+        <select id="team">
+          <option value="home">Home</option>
+          <option value="away">Away</option>
+          <option value="home,away" selected="true">Home & Away</option>
+        </select>
+      </label>
+
+      <label>
+        Jugador (optional):
+        <input type="text" id="player">
+      </label>
+
+      <input type="checkbox" id="show-ind-shots">
+      <label for="show-ind-shots"> Show individual shots</label>
+
+      <button type="submit">Watch stats</button>
+
+    </form>
+
+    <div id="progress-container" class="inactive">
+      <div id="progress-bar"
+          style="width:0%; height:20px; background:#4caf50; color:white; text-align:center;">
+        0%
+      </div>
+    </div>
+
+
+    <div id="result">
+      <h3>Shot map</h3>
+      <img id="shotmap-img" alt="Shot map">
+      <h3>Assisted vs Unassisted shots</h3>
+      <div id="assisted-stats"></div>
+    </div>
+  </div>
 </div>
 
 <script src="/web/script.js"></script>
