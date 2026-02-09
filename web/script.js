@@ -137,31 +137,63 @@ async function loadSchedule() {
 
   data.forEach(m => {
     const btn = document.createElement("button");
-    btn.className = "match-btn";
+    const typeClass = m.type.replaceAll(".", "-");
+    btn.className = `match-btn ${typeClass}`; //per pintar els botons segons el tipus de partit
+    btn.dataset.matchId = m.match_id;
 
     const date = new Date(m.date).toLocaleDateString();
-    btn.textContent = `${date} · ${m.type} · ${m.match_id}`;
+    btn.textContent = `${date} · ${typeClass} · ${m.match_id}`;
 
-    btn.onclick = () => loadMatch(m.match_id, btn);
+    btn.onclick = () => loadMatch(m.match_id, m.type, date, btn);
 
     matchesContainer.appendChild(btn);
   });
 }
 
-function loadMatch(matchId, button) {
+function loadMatch(matchId, type, date, button) {
   if (selectedMatches.has(matchId)) {
-    // 🔴 deseleccionar
     selectedMatches.delete(matchId);
     button.classList.remove("selected");
   } else {
-    // 🟢 seleccionar
     selectedMatches.add(matchId);
     button.classList.add("selected");
   }
 
-  // Actualitzar el camp hidden/input
+  renderSelectedMatches(type, date);
+}
+
+
+function renderSelectedMatches(type, date) {
+  const container = document.getElementById("selected-matches");
+  container.innerHTML = "";
+
+  selectedMatches.forEach(matchId => {
+    const card = document.createElement("div");
+    card.className = "match-card";
+
+    const span = document.createElement("span");
+    span.textContent = matchId;
+
+    const removeBtn = document.createElement("button");
+    removeBtn.textContent = "✕";
+    removeBtn.className = "remove-btn";
+
+    removeBtn.onclick = () => {
+      // eliminar del Set
+      selectedMatches.delete(matchId);
+      updateMatchIds();
+      renderSelectedMatches();
+    }
+
+    card.appendChild(span);
+    card.appendChild(removeBtn);
+    container.appendChild(card);
+  });
+
+  updateMatchIds();
+}
+
+function updateMatchIds() {
   document.getElementById("match_ids").value =
     Array.from(selectedMatches).join(",");
-
-  console.log("Selected matches:", Array.from(selectedMatches));
 }

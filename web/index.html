@@ -1,3 +1,5 @@
+<!-- index.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +11,7 @@
 
 
 <div id="sidebar">
+
   <h1>BuzzerCheater</h1>
   <h3>Calendari</h3>
   <div class="container">
@@ -18,7 +21,7 @@
     <label>Season</label><br>
     <input id="season" type="number" value="71"><br><br>
 
-    <button onclick="loadSchedule()">Load schedule</button>
+    <button class="submit" onclick="loadSchedule()">Load schedule</button>
 
     <hr>
     <div id="matches"></div>
@@ -27,13 +30,14 @@
 
 <div id="main-screen">
   <h3>Mapa de tirs</h3>
+
   <div class="container">
+    
+    <p>Partits seleccionats:</p>
+    <input type = "hidden" id="match_ids" name="match_ids">
+    <div id="selected-matches"></div>
 
     <form id="shotmap-form">
-      <label>
-        Match IDs (separats per comes):
-        <input type="text" id="match_ids">
-      </label>
 
       <label>
         Equip:
@@ -49,10 +53,11 @@
         <input type="text" id="player">
       </label>
 
-      <input type="checkbox" id="show-ind-shots">
-      <label for="show-ind-shots"> Show individual shots</label>
+      <label for="show-ind-shots"> Show individual shots
+        <input type="checkbox" id="show-ind-shots">
+      </label>
 
-      <button type="submit">Watch stats</button>
+      <button class= "submit" type="submit">Watch stats</button>
 
     </form>
 
