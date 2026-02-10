@@ -16,7 +16,7 @@ Sidebar
 -------------------*/
 
 #sidebar {
-  border: solid black 1px;
+  /*border: solid black 1px;*/
   max-width: 500px;
   min-width: fit-content;
   padding: 10px;
@@ -24,7 +24,7 @@ Sidebar
 }
 
 #main-screen{
-  border: solid blue 1px;
+  /*border: solid blue 1px;*/
   width: 80%;
   padding: 20px;
   
