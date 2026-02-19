@@ -373,18 +373,7 @@ class BBEvent:
             realclock: {}
             data: {}
             comment: {}
-        """.format(
-            self.team,
-            self.type,
-            self.result,
-            self.variation,
-            self.player1,
-            self.player2,
-            self.gameclock.clock,
-            self.realclock,
-            self.data,
-            self.comment,
-        )
+        """.format(self.team, self.type, self.result, self.variation, self.player1, self.player2, self.gameclock.clock, self.realclock, self.data, self.comment,)
 
     def to_string(self, p1, p2):
         return """BBEvent

@@ -17,8 +17,8 @@ def get_team_schedule(teamid: str) -> str:
     xml_path = team_dir / "schedule.xml"
 
 
-    #if xml_path.exists():
-        #return xml_path.read_text(encoding="utf-8")
+    if xml_path.exists():
+        return xml_path.read_text(encoding="utf-8")
 
     response = requests.get(
         f"https://www.buzzerbeater.com/team/{teamid}/schedule.aspx"

@@ -1,5 +1,5 @@
+# game.py
 from typing import Dict
-
 from bbapi import BBApi
 from team import Team
 from comments import Comments
@@ -39,25 +39,18 @@ class Extension:
 
 
 class Game:
-    def __init__(
-        self,
-        matchid: str,
-        events: list[BBEvent],
-        ht: Team,
-        at: Team,
-        args,
-        extensions: list[Extension],
-    ) -> None:
+    def __init__(self, matchid: str, events: list[BBEvent], ht: Team, at: Team, args, extensions: list[Extension],) -> None:
+
         self.matchid = matchid
         self.events = events
         self.teams = [ht, at]
-        self.comments = Comments()
         self.gameclock = 0
         self.shotclock = 24
         self.poss = 0
         self.quarter = 1
         self.quater_poss = [0, 0, 0, 0]
         self.args = args
+        self.comments = Comments(args)
         self.event_index = 0
         self.baseevents: list[BaseEvent] = []
         self.extensions = extensions
@@ -66,19 +59,19 @@ class Game:
         self.shotclock = min(shot, Gameclock(game).till_break())
         self.gameclock = game
 
-        if self.args.print_events:
+        if self.args["print_events"]:
             print(f"Set shotclock: {self.shotclock}")
 
     def patch_clock(self, bev, prev_bev):
         clock_delta = bev.gameclock - prev_bev.gameclock
         bev.shotclock = max(0, self.shotclock - clock_delta)
 
-        if self.args.print_events:
+        if self.args["print_events"]:
             print(f"Remaining shotclock: {bev.shotclock}")
 
     def update_possession(self, team: int):
         self.poss = team
-        if self.args.print_events:
+        if self.args["print_events"]:
             print(f"Next possession: {self.teams[self.poss].name}")
 
     def gameclock_normalized(self, gameclock: int):
@@ -89,6 +82,8 @@ class Game:
         return clock
 
     def play(self) -> None:
+        #print("Estic entrant a la funció game.play()")
+        #print("game.py ARGS:", self.args)
         idx = 0
         for event in self.events:
             comment = self.comments.get_comment(event, self.teams)
@@ -102,7 +97,7 @@ class Game:
         prev_bev = BaseEvent([], Clocks(-1, -1, -1))
 
         for idx, bev in enumerate(self.baseevents):
-            if self.args.print_events:
+            if self.args["print_events"]:
                 print()
                 print("###", bev.gameclock, bev.comments)
 
@@ -319,14 +314,14 @@ class Game:
                 prev_bev = bev
 
         for team in reversed(self.teams):
-            if self.args.print_stats:
+            if self.args["print_stats"]:
                 team.print_stats()
-            if self.args.save_charts:
+            if self.args["save_charts"]:
                 team.shot_chart.save(f"matches/{self.matchid}-{team.short}.png")
 
         # Verify data against BBApi boxscore
-        if self.args.username and self.args.password and self.args.verify:
-            bbapi = BBApi(self.args.username, self.args.password)
+        if self.args["username"] and self.args["password"] and self.args["verify"]:
+            bbapi = BBApi(self.args["username"], self.args["password"])
             bbteams = bbapi.boxscore(matchid=self.matchid)
             assert bbteams[0] == self.teams[1]
             assert bbteams[1] == self.teams[0]

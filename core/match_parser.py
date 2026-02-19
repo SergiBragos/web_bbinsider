@@ -10,7 +10,8 @@ from team import Team
 
 def parse_report(report: str, at: Team, ht: Team) -> list[BBEvent]:
     events = []
-
+    if not report:
+        return []
     # Read players (home)
     i = 0
     index = 0
@@ -88,6 +89,22 @@ def parse_report(report: str, at: Team, ht: Team) -> list[BBEvent]:
 
 
 
+def get_xml_text(matchid: str, matches_dir: Path) -> str:
+    path = matches_dir / "report.xml"
+
+    if path.exists():
+        return path.read_text(encoding="utf-8")
+
+    response = requests.get(
+        f"https://buzzerbeater.com/match/viewmatch.aspx?matchid={matchid}"
+    )
+    response.raise_for_status()
+
+    path.write_text(response.text, encoding="utf-8")
+    return response.text
+
+
+
 def parse_xml(text: str):
     root = XML.fromstring(text)
 
@@ -112,7 +129,7 @@ def parse_xml(text: str):
         elif child.tag.startswith("APlayer") and "Nick" not in child.tag:
             at.players.append(Player(child.text))
         elif child.tag == "ReportString":
-            report = child.text.strip()
+            report = child.text.strip() or ""
 
     while len(ht.players) < 12:
         ht.players.append(Player("Lucky Fan"))
@@ -121,18 +138,3 @@ def parse_xml(text: str):
 
     events = parse_report(report, at, ht)
     return events, ht, at
-
-
-def get_xml_text(matchid: str, matches_dir: Path) -> str:
-    path = matches_dir / "report.xml"
-
-    if path.exists():
-        return path.read_text(encoding="utf-8")
-
-    response = requests.get(
-        f"https://buzzerbeater.com/match/viewmatch.aspx?matchid={matchid}"
-    )
-    response.raise_for_status()
-
-    path.write_text(response.text, encoding="utf-8")
-    return response.text

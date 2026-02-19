@@ -80,17 +80,17 @@ def generate_shotmap_data(match_ids, team=("home", "away"), player=None, analysi
     #"home,away" → ("home", "away")
     if isinstance(team, str):
         team = tuple(t.strip() for t in team.split(","))
-        print("TEAM NORMALIZED FROM STR:", team)
+        #print("TEAM NORMALIZED FROM STR:", team)
     elif isinstance(team, list) and len(team) == 1 and "," in team[0]:
         team = tuple(t.strip() for t in team[0].split(","))
-        print("TEAM NORMALIZED FROM LIST:", team)
+        #print("TEAM NORMALIZED FROM LIST:", team)
     #El mateix si passes varis match_id. Els normalitza com a tupla d'IDs individuals.
     if isinstance(match_ids, str):
         match_ids = tuple(m.strip() for m in match_ids.split(","))
-        print("ID NORMALIZED FROM STR:", match_ids)
+        #print("ID NORMALIZED FROM STR:", match_ids)
     elif isinstance(match_ids, list) and len(match_ids) == 1 and "," in match_ids[0]:
         match_ids = tuple(m.strip() for m in match_ids[0].split(","))
-        print("ID NORMALIZED FROM LIST:", match_ids)
+        #print("ID NORMALIZED FROM LIST:", match_ids)
     for match_id in match_ids:
         path = Path("matches") / match_id / "shot_events.json"
         with open(path, "r", encoding="utf-8") as f:

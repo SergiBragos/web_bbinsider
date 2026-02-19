@@ -22,7 +22,7 @@ class Team:
         self.last_update = 0
         self.shot_chart = ShotChart()
 
-        self.verbose = True
+        self.verbose = False
         self.off_strategy = "~unknown~"
         self.def_strategy = "~unknown~"
 
@@ -109,32 +109,16 @@ class Team:
             player.stats.new_qtr_sheet()
 
     def print_stats(self):
-        headers = [
-            "Name",
-            "MIN",
-            "PTS",
-            "FG",
-            "TP",
-            "FT",
-            "+/-",
-            "OR",
-            "DR",
-            "TR",
-            "AST",
-            "TO",
-            "STL",
-            "BLK",
-            "PF",
-        ]
-
+        headers = ["Name", "MIN", "PTS", "FG", "TP", "FT", "+/-", "OR", "DR", "TR", "AST", "TO", "STL", "BLK", "PF",]
         table = []
+
         for player in self.players:
             table.append([player.name + " " + str(player.id), *player.stats.full.row()])
         table.append(SEPARATING_LINE)
         table.append([self.name, *self.stats.full.row()])
-        print(tabulate(table, headers=headers, tablefmt="rst", stralign="right"))
-        print()
-        print()
+        #print(tabulate(table, headers=headers, tablefmt="rst", stralign="right"))
+        #print()
+        #print()
 
     def __eq__(self, other):
         def stats_eql(stat: Statistic):

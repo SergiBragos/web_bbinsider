@@ -6,9 +6,8 @@ body {
   background: linear-gradient(135deg, rgb(235, 141, 18), rgb(30, 56, 65));
   min-height: 100vh;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: left;
-  padding: 0px;
 }
 
 /*-------------------
@@ -16,18 +15,24 @@ Sidebar
 -------------------*/
 
 #sidebar {
-  /*border: solid black 1px;*/
+  border: solid black 1px;
   max-width: 500px;
   min-width: fit-content;
-  padding: 10px;
-  padding-right: 30px;
+  padding: 20px;
 }
 
 #main-screen{
-  /*border: solid blue 1px;*/
-  width: 80%;
+  border: solid rgb(255, 0, 43) 2px;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+#result-screen{
+  border: solid blue 1px;
+  width: 100%;
+  max-width: max-content;
   padding: 20px;
-  
 }
 
 .match-btn {
@@ -89,7 +94,6 @@ h3{
 .container {
   background: rgb(219, 219, 219);
   padding: 20px;
-  width: 90%;
   border-radius: 10px;
   box-shadow: 6px 10px rgba(0, 0, 0, 0.2);
   display: flex;
@@ -101,15 +105,14 @@ label, p {
   /*border: solid black 1px;*/
   display: flex;
   flex-direction: column;
-  margin-bottom: 10px;
 }
 
 input,
 select,
 button.submit {
   width: 100%;
-  max-width: 400px;
-  padding: 2px;
+  max-width: 300px;
+  padding: 3px;
 }
 
 .submit {
@@ -244,17 +247,13 @@ Targetes dels partits
 
 
 
-@media (max-width: 600px) {
-  body {
+@media (max-width: 780px) {
+  #main-screen {
     flex-direction: column;
   }
 
   #sidebar {
     width: 100%;
-    max-width: none;
-  }
-
-  #main-screen {
-    width: 100%;
+    max-width: max-content;
   }
 }

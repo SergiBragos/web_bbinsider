@@ -3,9 +3,10 @@ from event import *
 
 
 class Comments:
-    def __init__(self) -> None:
+    def __init__(self, GameArgs: dict) -> None:
         self.comments: dict[str, dict[int, str]] = {}
-
+        self.game_args = GameArgs
+        self.print_comments = self.game_args["print_events"] # Important per que es processin més ràpid els partits, si vols es pot posar a true i els esdeveniments s'imprimiran al terminal.
         input = "commentary-en.xml"
         tree = XML.parse(input)
         root = tree.getroot()
@@ -75,7 +76,7 @@ class Comments:
         evar1 = int(data[4], 16)  # ???
         event_variation = int(data[5], 16)
 
-        if __debug__:
+        if self.print_comments:
             print(
                 "\nRaw:\n\tprefix: {}\n\tresult: {}\n\tloc9: {}\n\tvar: {}".format(
                     event_prefix, event_result, evar1, event_variation
@@ -140,7 +141,7 @@ class Comments:
         event_prefix = event.type // 100
         event_type = event.type
 
-        if __debug__:
+        if self.print_comments:
             print(
                 f"RAW2:\n\tloc3: {loc3}\n\tloc10: {loc10}\n\ttype: {event_type}\n\tprefix: {event_prefix}"
             )
@@ -204,7 +205,7 @@ class Comments:
         event.player1obj = p1
         event.player2obj = p2
 
-        if __debug__:
+        if self.print_comments:
             print(event.to_string(p1, p2))
 
         if "$player1$" in text:
@@ -237,7 +238,7 @@ class Comments:
             text = text.replace("$team1$", teams[t1].name)
 
         event.comment = text
-        if __debug__:
+        if self.print_comments:
             print(event.to_string(p1, p2))
 
         return text

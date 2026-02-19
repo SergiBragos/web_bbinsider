@@ -114,7 +114,6 @@ def api_schedule(teamid: str = Query(...), season: str = Query(...)):
 ######
 
 if __name__ == "__main__":
-    print(
-        get_shotmap(match_ids="137869361,137869372,137869379,137866459,138565399,137869386",team="home,away",player="Constantí Sucarrats"),
-        get_assisted(match_ids="137869361,137869372,137869379,137866459,138565399,137869386",team="home,away",player="Constantí Sucarrats")
-    )
+        print("SHOTMAP FILE:", get_shotmap(match_ids="137869361,137869372,137869379,137866459,138565399,137869386,137869395,137869403",team="home,away",player="Constantí Sucarrats"))
+
+        print("ASSISTED:", get_assisted(match_ids="137869361,137869372,137869379,137866459,138565399,137869386,137869395,137869403",team="home,away",player="Constantí Sucarrats"))

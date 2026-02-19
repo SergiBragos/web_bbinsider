@@ -9,71 +9,75 @@
 </head>
 <body>
 
-
-<div id="sidebar">
-
-  <h1>BuzzerCheater</h1>
-  <h3>Calendari</h3>
-  <div class="container">
-    <label>Team ID</label><br>
-    <input id="teamid" type="text" value="138045"><br><br>
-
-    <label>Season</label><br>
-    <input id="season" type="number" value="71"><br><br>
-
-    <button class="submit" onclick="loadSchedule()">Load schedule</button>
-
-    <hr>
-    <div id="matches"></div>
-  </div>
-</div>
+<header>
+    <h1>BuzzerCheater</h1>
+</header>
 
 <div id="main-screen">
-  <h3>Mapa de tirs</h3>
+  <div id="sidebar">
 
-  <div class="container">
-    
-    <p>Partits seleccionats:</p>
-    <input type = "hidden" id="match_ids" name="match_ids">
-    <div id="selected-matches"></div>
+    <h3>Calendari</h3>
+    <div class="container">
+      <label>Team ID</label>
+      <input id="teamid" type="text" value="138045"><br>
 
-    <form id="shotmap-form">
+      <label>Season</label>
+      <input id="season" type="number" value="71"><br>
 
-      <label>
-        Equip:
-        <select id="team">
-          <option value="home">Home</option>
-          <option value="away">Away</option>
-          <option value="home,away" selected="true">Home & Away</option>
-        </select>
-      </label>
+      <button class="submit" onclick="loadSchedule()">Load schedule</button>
 
-      <label>
-        Jugador (optional):
-        <input type="text" id="player">
-      </label>
-
-      <label for="show-ind-shots"> Show individual shots
-        <input type="checkbox" id="show-ind-shots">
-      </label>
-
-      <button class= "submit" type="submit">Watch stats</button>
-
-    </form>
-
-    <div id="progress-container" class="inactive">
-      <div id="progress-bar"
-          style="width:0%; height:20px; background:#4caf50; color:white; text-align:center;">
-        0%
-      </div>
+      <hr>
+      <div id="matches"></div>
     </div>
+  </div>
 
+  <div id="result-screen">
+    <h3>Mapa de tirs</h3>
 
-    <div id="result">
-      <h3>Shot map</h3>
-      <img id="shotmap-img" alt="Shot map">
-      <h3>Assisted vs Unassisted shots</h3>
-      <div id="assisted-stats"></div>
+    <div class="container">
+      
+      <p>Partits seleccionats:</p>
+      <input type = "hidden" id="match_ids" name="match_ids">
+      <div id="selected-matches"></div>
+
+      <form id="shotmap-form">
+
+        <label>
+          Equip:
+          <select id="team">
+            <option value="home">Home</option>
+            <option value="away">Away</option>
+            <option value="home,away" selected="true">Home & Away</option>
+          </select>
+        </label><br>
+
+        <label>
+          Jugador (optional):
+          <input type="text" id="player">
+        </label><br>
+
+        <label for="show-ind-shots"> Show individual shots<br>
+          <input type="checkbox" id="show-ind-shots">
+        </label><br>
+
+        <button class= "submit" type="submit">Watch stats</button>
+
+      </form>
+
+      <div id="progress-container" class="inactive">
+        <div id="progress-bar"
+            style="width:0%; height:20px; background:#4caf50; color:white; text-align:center;">
+          0%
+        </div>
+      </div>
+
+      <div id="result">
+        <h3>Shot map</h3>
+        <img id="shotmap-img" alt="Shot map">
+        <h3>Assisted vs Unassisted shots</h3>
+        <div id="assisted-stats"></div>
+      </div>
+
     </div>
   </div>
 </div>

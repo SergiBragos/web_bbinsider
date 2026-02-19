@@ -189,9 +189,7 @@ class BBApi:
             add_team_stat(Statistic.FreeThrowsAtt, team_stat("./fta"))
             add_team_stat(Statistic.FreeThrowsMade, team_stat("./ftm"))
             add_team_stat(Statistic.OffRebounds, team_stat("./oreb"))
-            add_team_stat(
-                Statistic.DefRebounds, team_stat("./reb") - team_stat("./oreb")
-            )
+            add_team_stat(Statistic.DefRebounds, team_stat("./reb") - team_stat("./oreb"))
             add_team_stat(Statistic.Assists, team_stat("./ast"))
             add_team_stat(Statistic.Turnovers, team_stat("./to"))
             add_team_stat(Statistic.Steals, team_stat("./stl"))
@@ -232,10 +230,7 @@ class BBApi:
                 add_stat(Statistic.FreeThrowsAtt, stat("./fta"))
                 add_stat(Statistic.FreeThrowsMade, stat("./ftm"))
                 add_stat(Statistic.OffRebounds, stat("./oreb"))
-                add_stat(
-                    Statistic.DefRebounds,
-                    (stat("./reb") - stat("./oreb")),
-                )
+                add_stat(Statistic.DefRebounds,(stat("./reb") - stat("./oreb")),)
                 add_stat(Statistic.Assists, stat("./ast"))
                 add_stat(Statistic.Turnovers, stat("./to"))
                 add_stat(Statistic.Steals, stat("./stl"))
