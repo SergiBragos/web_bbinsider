@@ -7,6 +7,22 @@ from player import Player
 from stats import *
 from os.path import exists
 import password
+import math
+
+BB_SKILL_MAP = {
+    "jumpShot": "JS",
+    "range": "JR",
+    "outsideDef": "OD",
+    "handling": "HA",
+    "driving": "DR",
+    "passing": "PA",
+    "insideShot": "IS",
+    "insideDef": "ID",
+    "rebound": "RB",
+    "block": "SB",
+    "freeThrow": "FT",
+    "stamina": "ST",
+}
 
 class Network:
     def __init__(self):
@@ -33,9 +49,7 @@ class BBApi:
         self.network = Network()
 
         p = {"login": self.login, "code": self.password}
-        data = self.network.first_get(
-            "http://bbapi.buzzerbeater.com/login.aspx", p
-        )
+        data = self.network.first_get("http://bbapi.buzzerbeater.com/login.aspx", p)
 
         root = xml.fromstring(data)
 
@@ -113,9 +127,9 @@ class BBApi:
     def get_xml_schedule(self, teamid, season) -> str:
         path = f"teams/schedule_{teamid}_{season}.xml"
 
-        if exists(path):
-            with open(path, mode="r", encoding="utf-8") as f:
-                return f.read()
+        #if exists(path):
+        #    with open(path, mode="r", encoding="utf-8") as f:
+        #        return f.read()
 
         p = {"teamid": teamid, "season": season}
         text = self.network.get("http://bbapi.buzzerbeater.com/schedule.aspx", p)
@@ -136,6 +150,50 @@ class BBApi:
         position = root.find("./player/bestPosition")
 
         return position.text
+
+    def player_training(self, playerid: int) -> dict:
+        p = {"playerid": playerid}
+        data = self.network.get("http://bbapi.buzzerbeater.com/player.aspx", p)
+
+        root = xml.fromstring(data)
+        player = root.find("player")
+        skills_xml = player.find("skills")
+
+        # Nom
+        first_name = player.find("firstName").text
+        last_name = player.find("lastName").text
+
+        # Edat
+        age = int(player.find("age").text)
+
+        # Altura (inches -> cm)
+        height_in = int(player.find("height").text)
+        height_cm = round(height_in * 2.54)
+
+        # Econòmic
+        dmi = int(player.find("dmi").text)
+        salary = int(player.find("salary").text)
+
+        # Potencial (dins skills!)
+        potential = int(skills_xml.find("potential").text)
+
+        # Skills
+        skills = {}
+        for bb_tag, internal_name in BB_SKILL_MAP.items():
+            value = float(skills_xml.find(bb_tag).text)
+            skills[internal_name] = value
+
+        return {
+            "id": playerid,
+            "first_name": first_name,
+            "last_name": last_name,
+            "age": age,
+            "height": height_cm,
+            "potential": potential,
+            "dmi": dmi,
+            "salary": salary,
+            "skills": skills,
+        }
 
     def strategy(self, matchid=0):
         data = self.get_xml_boxscore(matchid)

@@ -15,21 +15,21 @@ Sidebar
 -------------------*/
 
 #sidebar {
-  border: solid black 1px;
+  /*border: solid black 1px;*/
   max-width: 500px;
   min-width: fit-content;
   padding: 20px;
 }
 
-#main-screen{
-  border: solid rgb(255, 0, 43) 2px;
+#shots-screen{
+  /*border: solid rgb(255, 0, 43) 2px;*/
   display: flex;
   flex-direction: row;
   width: 100%;
 }
 
 #result-screen{
-  border: solid blue 1px;
+  /*border: solid blue 1px;*/
   width: 100%;
   max-width: max-content;
   padding: 20px;
@@ -181,6 +181,7 @@ button.submit {
   max-width: 400px;
   background: #ddd;
   border-radius: 6px;
+  border: solid gray 1px;
   overflow: hidden;
   margin-top: 10px;
   transition: opacity 0.3s ease, height 0.3s ease;
@@ -248,7 +249,7 @@ Targetes dels partits
 
 
 @media (max-width: 780px) {
-  #main-screen {
+  #shots-screen {
     flex-direction: column;
   }
 

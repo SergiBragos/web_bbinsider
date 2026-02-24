@@ -9,7 +9,7 @@ from pathlib import Path
 from function_shotmap import shotmap
 from core.match_processor import ensure_match_processed
 from bbapi import BBApi
-from core.progress_store import MATCH_PROGRESS
+from core.progress_store import (init_match, update_match, finish_match, get_global_progress)
 from typing import Dict
 import password
 
@@ -25,12 +25,7 @@ def index():
 
 
 # Permetre crides des del navegador
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+app.add_middleware(CORSMiddleware,allow_origins=["*"],allow_methods=["*"],allow_headers=["*"],)
 
 # When the submit button is pressed, the HTML form is intercepted by JavaScript.
 # The JavaScript code manually builds a URL (e.g. /shotmap?match_ids=...&team=...)
@@ -41,10 +36,7 @@ app.add_middleware(
 # a different endpoint must be created (e.g. /rebounds) and called explicitly
 # from JavaScript.
 @app.get("/shotmap")
-def get_shotmap(match_ids: str,
-                team: str,
-                show_individual_shots: bool = False,
-                player: str | None = None):
+def get_shotmap(match_ids: str, team: str, show_individual_shots: bool = False, player: str | None = None):
 
     match_list = match_ids.split(",")
 
@@ -53,42 +45,27 @@ def get_shotmap(match_ids: str,
 
     output = "tmp/shotmap.png"
 
-    zone_stats, assisted = shotmap(
-        match_ids=match_list,
-        team=team,
-        player=player,
-        output_path=output,
-        show_individual_shots=show_individual_shots,
-        show=False
-    )
+    zone_stats, assisted = shotmap(match_ids=match_list, team=team, player=player, output_path=output, show_individual_shots=show_individual_shots, show=False)
 
     return FileResponse(output, media_type="image/png")
 
 @app.get("/assisted")
-def get_assisted(
-    match_ids: str,
-    team: str,
-    player: str | None = None):
+def get_assisted(match_ids: str,team: str,player: str | None = None):
 
     match_list = match_ids.split(",")
 
     for mid in match_list:
         ensure_match_processed(mid.strip(), team)
 
-    zone_stats, assisted = shotmap(
-        match_ids=match_list,
-        team=team,
-        player=player,
-        show=False
-    )
+    zone_stats, assisted = shotmap(match_ids=match_list,team=team,player=player,show=False)
 
     return assisted
 
 
-@app.get("/progress/{match_id}")
-def get_progress(match_id: str):
-    progress = MATCH_PROGRESS.get(match_id, 0)
-    return {"progress": progress}
+@app.get("/progress_batch")
+def progress_batch(match_ids: str):
+    ids = [m.strip() for m in match_ids.split(",") if m.strip()]
+    return get_global_progress(ids)
 
 
 

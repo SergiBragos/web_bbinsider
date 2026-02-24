@@ -2,6 +2,8 @@
 # BBINSIDER – SHOT ZONE ANALYSIS & VISUALIZATION
 # ==================================================
 import json
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from pathlib import Path
 from PIL import Image
@@ -181,13 +183,21 @@ def draw_shotmap(zone_stats, shots, show=True, show_individual_shots=False, outp
             pts = shape.get_xy()
             cx, cy = pts[:, 0].mean(), pts[:, 1].mean()
             if zone_name == "PAINT_SHOT":
-                cx, cy = 60, 96
+                cx, cy = 60,98
+            elif zone_name == "THREE_POINTER_CORNER":
+                cx, cy = 12,6
             elif zone_name == "THREE_POINTER_WING":
                 cx, cy = 84,18
             elif zone_name == "THREE_POINTER_LONG":
                 cx, cy = 140,96
             elif zone_name == "THREE_POINTER_TOPKEY":
                 cx, cy = 116,60
+            elif zone_name == "TWO_POINTER_WING":
+                cx, cy = 44,36
+            elif zone_name == "TWO_POINTER_ELBOW":
+                cx, cy = 80,58
+            elif zone_name == "TWO_POINTER_BASELINE":
+                cx, cy = 6,42
 
             shape.set_edgecolor("white")
 
@@ -236,7 +246,7 @@ if __name__ == "__main__":
     zone_stats, assisted = shotmap(
         match_ids="137869361,137869372,137869379,137866459,138565399,137869386,138575695",
         team="home,away",
-        player=None,
+        player="Constantí Sucarrats",
         show_individual_shots=False,
         show=True
     )

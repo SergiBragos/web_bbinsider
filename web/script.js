@@ -12,6 +12,7 @@ const selectedMatches = new Set();
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
+  //console.log("Botó clicat")
   const matchIds = document.getElementById("match_ids").value;
   const team = document.getElementById("team").value;
   const player = document.getElementById("player").value;
@@ -22,34 +23,71 @@ form.addEventListener("submit", async (e) => {
     url += `&player=${encodeURIComponent(player)}`;
   }
 
-  // 1️⃣ AQUEST GET ÉS EL QUE ACTIVA EL BACKEND
+  // 1️⃣ Activa backend
   img.src = url + "&t=" + Date.now();
 
-    // 2️⃣ JSON (fetch)
-  
-  let url_ass = `/assisted?match_ids=${matchIds}&team=${team}`
+  // 2️⃣ ACTIVA IMMEDIATAMENT LA BARRA
+  startBatchProgress(matchIds);
+
+  // Crea l'url per renderitzar la taula" Assisted"
+  let url_ass = `/assisted?match_ids=${matchIds}&team=${team}`;
   if (player.trim() !== "") {
     url_ass += `&player=${encodeURIComponent(player)}`;
   }
+
+  // 3️⃣ Fetch assisted (pot anar en paral·lel)
   const res = await fetch(url_ass);
   const data = await res.json();
-
-  // Renderitzar el diccionari d'assistències l qui hem anomenat data
   renderAssistedStats(data);
-  
-  // 3: barra de progrés per cada partit
-  processMatches(matchIds);
+
 });
 
 
-//Funció que crida a processar els partits d'un en un
-async function processMatches(matchIds) {
-  const matches = matchIds.split(",").map(m => m.trim());
 
-  for (const matchId of matches) {
-    await pollSingleMatch(matchId);
-  }
+//Funció que fa refrescar la barra de progrés cada cop que es demana l'anàlisi d'un nou partit.
+function startBatchProgress(matchIds) {
+  console.log("Analitzant partits");
+  
+  progressContainer.classList.remove("inactive");
+  progressBar.style.width = "0%";
+  progressContainer.textContent = "Starting analysis...";
+
+  pollBatchProgress(matchIds);
 }
+
+
+
+//Aquí s'analitzen els partits
+async function pollBatchProgress(matchIds) {
+  const matches = matchIds.split(",").map(m => m.trim());
+  const total = matches.length;
+  const start = Date.now();
+
+  const interval = setInterval(async () => {
+    // ⛔ tall de seguretat: 1 minut
+    if (Date.now() - start > 60000) {
+      clearInterval(interval);
+      progressBar.textContent = "Timeout while processing matches";
+      return;
+    }
+
+    const res = await fetch(`/progress_batch?match_ids=${matchIds}`);
+    const data = await res.json();
+
+    const done = data.done ?? 0;
+    const pct = Math.floor(done / total * 100);
+
+    progressBar.style.width = pct + "%";
+    progressContainer.textContent = `Processed ${done} / ${total} matches`;
+
+    if (done >= total) {
+      clearInterval(interval);
+      //progressContainer.classList.add("inactive");
+    }
+  }, 2000);
+}
+
+
 
 // Funció que renderitza el diccionari d'assistències
 function renderAssistedStats(assisted) {
@@ -94,33 +132,6 @@ function renderAssistedStats(assisted) {
   `;
 }
 
-//Barra de progrés que va creixent per a cada partit
-function pollSingleMatch(matchId) {
-  return new Promise((resolve) => {
-    progressContainer.classList.remove("inactive");
-
-    const interval = setInterval(async () => {
-      const res = await fetch(`/progress/${matchId}`);
-      const data = await res.json();
-
-      const pct = data.progress ?? 0;
-      progressBar.style.width = pct + "%";
-      progressBar.textContent = `Match ${matchId}: ${pct}%`;
-
-      if (pct >= 100) {
-        clearInterval(interval);
-
-        setTimeout(() => {
-          progressContainer.classList.add("inactive");
-          progressBar.style.width = "0%";
-          progressBar.textContent = "0%";
-          resolve();
-        }, 500);
-      }
-    }, 400);
-  });
-}
-
 
 //Funció que carrega el calendari d'un equip
 async function loadSchedule() {
@@ -149,6 +160,7 @@ async function loadSchedule() {
     matchesContainer.appendChild(btn);
   });
 }
+
 
 function loadMatch(matchId, type, date, button) {
   if (selectedMatches.has(matchId)) {
