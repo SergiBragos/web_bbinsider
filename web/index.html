@@ -80,7 +80,25 @@
     <h3>Entrenament</h3>
     <div id="training-screen">
       <div class="container">
+        <label>Player ID</label>
+        <input id="player_id" value="54646103"><br><br>
 
+        <label>Coach level</label>
+        <select id="coach">
+            <option>1</option><option>2</option><option>3</option>
+            <option selected>4</option>
+            <option>5</option><option>6</option><option>7</option>
+        </select><br><br>
+
+        <label>Setmana actual (1 - 14)</label>
+        <input id="current_week" type="number" min="1" max="14"><br><br>
+
+        <h3>Training plan</h3>
+        <div id="plan"></div>
+
+        <button id="training-btn">Simular</button>
+
+        <pre id="output"></pre>
       </div>
     </div>
 

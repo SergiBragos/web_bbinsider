@@ -7,6 +7,7 @@ from fastapi.staticfiles import StaticFiles
 import xml.etree.ElementTree as xml
 from pathlib import Path
 from function_shotmap import shotmap
+from training import training_plan
 from core.match_processor import ensure_match_processed
 from bbapi import BBApi
 from core.progress_store import (init_match, update_match, finish_match, get_global_progress)
@@ -15,7 +16,7 @@ import password
 
 
 app = FastAPI()
-bbapi_schedule = BBApi(password.user, password.password)
+bbapi = BBApi(password.user, password.password)
 
 app.mount("/web", StaticFiles(directory="web"), name="web")
 
@@ -71,7 +72,7 @@ def progress_batch(match_ids: str):
 
 @app.get("/api/schedule")
 def api_schedule(teamid: str = Query(...), season: str = Query(...)):
-    xml_text = bbapi_schedule.get_xml_schedule(teamid, season)
+    xml_text = bbapi.get_xml_schedule(teamid, season)
     root = xml.fromstring(xml_text)
 
     matches = []
@@ -86,11 +87,26 @@ def api_schedule(teamid: str = Query(...), season: str = Query(...)):
     return matches
 
 
-######
-#DEBUG
-######
+@app.get("/training")
+def training(
+    player_id: str = Query(...),
+    coach_level: int = Query(...),
+    current_week: int = Query(...),
+    plan: str = Query(...)
+):
+    training_list = plan.split("|")
 
-if __name__ == "__main__":
-        print("SHOTMAP FILE:", get_shotmap(match_ids="137869361,137869372,137869379,137866459,138565399,137869386,137869395,137869403",team="home,away",player="Constantí Sucarrats"))
+    result = training_plan(
+        playerid=player_id,
+        start_week=current_week,
+        training_plan=training_list,
+        coach_level=coach_level
+    )
 
-        print("ASSISTED:", get_assisted(match_ids="137869361,137869372,137869379,137866459,138565399,137869386,137869395,137869403",team="home,away",player="Constantí Sucarrats"))
+    return {
+        "player_id": player_id,
+        "coach_level": coach_level,
+        "start_week": current_week,
+        "weeks": len(training_list),
+        "skills_by_week": result
+    }

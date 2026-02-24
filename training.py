@@ -1,3 +1,5 @@
+#training.py
+
 import math
 from bbapi import BBApi
 import password
@@ -47,7 +49,6 @@ COEFF = {
     "SB for 45": {"SB":0.375, "ID":0.15, "RB": 0.075},
     "SB for 345": {"SB":0.2, "ID":0.08, "RB": 0.04},
 }
-
 #Habilitat que marca el coeficient de cross training per a cada tipus d'entrenament
 PRIMARY_SKILL = {
     "JS for 12": "JS",
@@ -91,7 +92,6 @@ PRIMARY_SKILL = {
     "SB for 45": "SB",
     "SB for 345": "SB"
 }
-
 #ELASTIC_EFFECT["JS"] son totes les habilitats que afecten el valor actual de JS en un entrenament
 ELASTIC_EFFECT = {
     "JS": [0,1,0,1,1,0,0,0,0,0],
@@ -105,7 +105,6 @@ ELASTIC_EFFECT = {
     "RB": [0,0,0,0,0,0,1,1,0,0],
     "SB": [0,0,0,0,0,0,0,1,1,0]
 }
-
 #Efecte directe de l'edat en l'entrenament
 AGE_COEFF = {
     18:1.00, 19:0.95, 20:0.88, 21:0.78, 22:0.70,
@@ -113,7 +112,6 @@ AGE_COEFF = {
     28:0.21, 29:0.16, 30:0.11, 31:0.07, 32:0.05,
     33:0.03, 34:0.02, 35:0.01,
 }
-
 #Efecte directe de l'altura
 HEIGHT_COEFF = {
     175: {"JS":1,"JR":1.5,"OD":1.5,"HA":1.5,"DR":1,"PA":1,"IS":0.5,"ID":0.5,"RB":0.5,"SB":0.5},
@@ -139,7 +137,6 @@ HEIGHT_COEFF = {
     226: {"JS":1,"JR":0.5,"OD":0.5,"HA":0.5,"DR":1,"PA":1,"IS":1.5,"ID":1.5,"RB":1.5,"SB":1.5},
     229: {"JS":1,"JR":0.45,"OD":0.45,"HA":0.45,"DR":1,"PA":1,"IS":1.55,"ID":1.55,"RB":1.55,"SB":1.55},
 }
-
 #Efecte directe de l'entrenador
 COACH_COEFF = {
     7:1.06,
@@ -152,7 +149,7 @@ COACH_COEFF = {
 }
 
 
-#FUNCIONS
+#FUNCIONS AUXILIARS
 def elastic_effect(target_skill: str, current_skills: dict) -> float:
     weights = ELASTIC_EFFECT[target_skill]
     values = [current_skills[s] for s in MAIN_SKILLS]
@@ -173,7 +170,7 @@ def cross_training(skill: str, current_skills: dict) -> float:
     return 1
 
 
-def train_skill(skills: dict,training_type: str,age: int,height: int,coach_level: int) -> dict:
+def train_skill(skills: dict, training_type: str, age: int, height: int, coach_level: int) -> dict:
     new_skills = skills.copy()
 
     for skill, base_coeff in COEFF[training_type].items():
@@ -196,13 +193,13 @@ def train_skill(skills: dict,training_type: str,age: int,height: int,coach_level
     return new_skills
 
 
-#FUNCIONS AUXILIARS
 def average_skills(skills: dict):
   res = 0
   for skill in skills:
     if skill not in ["FT", "ST"]:
       res += skills[skill]
   return res/10
+
 
 def mmult(list1: list, list2: list):
   res = 0
@@ -211,22 +208,57 @@ def mmult(list1: list, list2: list):
   return res
 
 
+# FUNCIONS PRINCIPALS
+def training_plan(playerid: str, start_week: int, training_plan: list, coach_level: int=4, bonus: dict={"JS": 0, "JR": 0, "OD": 0, "HA": 0, "DR": 0, "PA": 0, "IS": 0, "ID": 0, "RB": 0, "SB":0, "FT":0, "ST":0}):
+  api = BBApi(password.user, password.password)
+  try:
+    player = api.player_all_data(playerid)
+  except Exception as e:
+    return {"error": str(e)}
+  
+  age = player["age"]
+  height = player["height"]
+  week = start_week
+
+  #Diccionari on es guardaran les habilitats després de cada entrenament
+  weekly_skills = {}
+  simulated = 0
+  weekly_skills[simulated] = {}
+  for skill, value in player["skills"].items():
+    weekly_skills[simulated][skill] = value + bonus.get(skill, 0)
+  #Crear la primera línia del diccionari amb les habilitats extretes de BB + les habilitats inicials que seleccioni l'usuari.
+  for key in player["skills"].keys():
+    weekly_skills[simulated][key] = player["skills"][key] + bonus[key]
+
+  #Dades inicials del jugador
+  print(
+    f"\nName: {player['first_name']} {player['last_name']} "
+    f"|| salary: {player['salary']} $ "
+    f"|| pot: {player['potential']} "
+    f"|| age: {player['age']} years "
+    f"|| height: {player['height']} cm\n\n"
+    f"Habilitats inicials: {weekly_skills[0]}\n")
+
+  while simulated < len(training_plan):
+    simulated += 1
+    if week == 14:
+      week = 1
+      age += 1
+    elif week < 14:
+      week +=1
+    weekly_skills[simulated] = train_skill(weekly_skills[simulated-1], training_plan[simulated-1], age, player['height'], coach_level)
+    #print(f"Setmana {week}, edat {age}: ", weekly_skills[simulated], "\n")
+
+  return weekly_skills
+
+
 # DEBUG
 if __name__ == "__main__":
 
-  bonus = {"JS": 0.22, "JR": 0.5, "OD": 0.35, "HA": 0.57, "DR": 0.12, "PA": 0.5, "IS": 0.18, "ID": 0.38, "RB": 0, "SB":0.5, "FT":0, "ST":0}
+  bonus = {'JS': 0.22, 'JR': 0.5, 'OD': 0.35, 'HA': 0.57, 'DR': 0.12, 'PA': 0.5, 'IS': 0.18, 'ID': 0.38, 'RB': 0.0, 'SB': 0.5, 'FT': 0.0, 'ST': 0.0}
 
-  week = 1
-  player = BBApi(password.user, password.password)
-  player_caract = player.player_training(playerid = "54646103")
-  skills = player_caract["skills"]
-
-  for key in skills.keys():
-    skills[key] += bonus[key]
-  print(f"Name: {player_caract["first_name"]} {player_caract["last_name"]} || salary: {player_caract['salary']} $ || pot: {player_caract["potential"]} || age: {player_caract['age']} years || height: {player_caract['height']} cm\nHabilitats inicials: {player_caract['skills']}")
-
-  while week <= 9:
-    skills = train_skill(skills, "OD for 12", 21, 193, 4)
-    week += 1
-  print("Setmanes d'entrenament: ", week-1)
-  print("Habilitats finals: ", skills)
+  print(training_plan(playerid="54646103",
+                      start_week=5,
+                      horizon=23,
+                      coach_level=4,
+                      bonus=bonus))

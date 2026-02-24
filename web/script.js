@@ -209,3 +209,57 @@ function updateMatchIds() {
   document.getElementById("match_ids").value =
     Array.from(selectedMatches).join(",");
 }
+
+
+//FUNCIONS DE L'ENTRENAMENT
+const trainings = [
+  "JS for 12","JS for 34","JS for 23","JS for team",
+  "JR for 2","JR for 12","JR for 23","JR for team",
+  "OD for 1","OD for 12","OD for 123",
+  "HA for 1","HA for 12","HA for 123",
+  "DR for 12","DR for 34","DR for team",
+  "PA for 1","PA for 12","PA for team",
+  "IS for 5","IS for 45","IS for 345",
+  "ID for 5","ID for 45","ID for 345",
+  "RB for 45","RB for team",
+  "SB for 5","SB for 45","SB for 345"
+];
+const trainingBtn = document.getElementById("training-btn");
+const planDiv = document.getElementById("plan");
+
+trainingBtn.addEventListener("click", runTraining);
+
+for (let i = 0; i < 14; i++) {
+    const sel = document.createElement("select");
+    trainings.forEach(t => {
+        const o = document.createElement("option");
+        o.text = t;
+        sel.add(o);
+    });
+    planDiv.append(`Week ${i+1}: `);
+    planDiv.append(sel);
+    planDiv.append(document.createElement("br"));
+    planDiv.append(document.createElement("br"));
+}
+
+async function runTraining() {
+    const playerId = document.getElementById("player_id").value;
+    const coach = document.getElementById("coach").value;
+    const currentWeek = document.getElementById("current_week").value;
+
+    const trainingPlan = [...planDiv.querySelectorAll("select")]
+        .map(s => s.value)
+        .join("|"); // separador segur
+
+    const url =
+        `/training?player_id=${playerId}` +
+        `&coach_level=${coach}` +
+        `&current_week=${currentWeek}` +
+        `&plan=${encodeURIComponent(trainingPlan)}`;
+
+    const res = await fetch(url);
+    const data = await res.json();
+
+    document.getElementById("output").textContent =
+        JSON.stringify(data, null, 2);
+}

@@ -151,7 +151,7 @@ class BBApi:
 
         return position.text
 
-    def player_training(self, playerid: int) -> dict:
+    def player_all_data(self, playerid: int) -> dict:
         p = {"playerid": playerid}
         data = self.network.get("http://bbapi.buzzerbeater.com/player.aspx", p)
 
