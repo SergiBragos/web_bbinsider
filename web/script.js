@@ -213,7 +213,7 @@ function updateMatchIds() {
 
 //FUNCIONS DE L'ENTRENAMENT
 const trainings = [
-  "JS for 12","JS for 34","JS for 23","JS for team",
+  "None","JS for 12","JS for 34","JS for 23","JS for team",
   "JR for 2","JR for 12","JR for 23","JR for team",
   "OD for 1","OD for 12","OD for 123",
   "HA for 1","HA for 12","HA for 123",
@@ -226,20 +226,20 @@ const trainings = [
 ];
 const trainingBtn = document.getElementById("training-btn");
 const planDiv = document.getElementById("plan");
+const trainingDuration = document.getElementById("training-duration");
 
 trainingBtn.addEventListener("click", runTraining);
 
-for (let i = 0; i < 14; i++) {
+for (let i = 0; i < 28; i++) {
     const sel = document.createElement("select");
     trainings.forEach(t => {
         const o = document.createElement("option");
         o.text = t;
         sel.add(o);
     });
+    planDiv.append(document.createElement("br"));
     planDiv.append(`Week ${i+1}: `);
     planDiv.append(sel);
-    planDiv.append(document.createElement("br"));
-    planDiv.append(document.createElement("br"));
 }
 
 async function runTraining() {

@@ -96,7 +96,7 @@ def training(
 ):
     training_list = plan.split("|")
 
-    result = training_plan(
+    result, age, name, surname = training_plan(
         playerid=player_id,
         start_week=current_week,
         training_plan=training_list,
@@ -105,6 +105,9 @@ def training(
 
     return {
         "player_id": player_id,
+        "name": name,
+        "surname": surname,
+        "age_at_end": age,
         "coach_level": coach_level,
         "start_week": current_week,
         "weeks": len(training_list),

@@ -8,49 +8,52 @@ MAIN_SKILLS = ["JS", "JR", "OD", "HA", "DR", "PA", "IS", "ID", "RB", "SB"]
 
 # Coeficients base que s'entrenen quan selecciones un entrenament
 COEFF = {
-    "JS for 12": {"JS":0.5, "JR":0.1, "HA":0.05, "DR":0.05},
-    "JS for 34": {"JS":0.4, "JR":0.05, "IS":0.2},
-    "JS for 23": {"JS":0.5, "JR":0.1, "HA":0.05, "DR":0.05},
-    "JS for team": {"JS":0.22, "JR":0.044, "HA":0.022, "DR":0.022},
+  "None": {},
 
-    "JR for 2": {"JR":0.4, "JS":0.2, "HA":0.05, "DR":0.05},
-    "JR for 12": {"JR":0.3, "JS":0.15, "HA":0.0375, "DR":0.0375},
-    "JR for 23": {"JR":0.3, "JS":0.15, "HA":0.0375, "DR":0.0375},
-    "JR for team": {"JR":0.1, "JS":0.05, "HA":0.0125, "DR":0.0125},
+  "JS for 12": {"JS":0.5, "JR":0.1, "HA":0.05, "DR":0.05},
+  "JS for 34": {"JS":0.4, "JR":0.05, "IS":0.2},
+  "JS for 23": {"JS":0.5, "JR":0.1, "HA":0.05, "DR":0.05},
+  "JS for team": {"JS":0.22, "JR":0.044, "HA":0.022, "DR":0.022},
 
-    "OD for 1": {"OD":0.5, "HA":0.05, "DR":0.05, "ID":0.1},
-    "OD for 12": {"OD":0.375, "HA":0.0375, "DR":0.0375, "ID":0.075},
-    "OD for 123": {"OD":0.2, "HA":0.02, "DR":0.02, "ID":0.04},
+  "JR for 2": {"JR":0.4, "JS":0.2, "HA":0.05, "DR":0.05},
+  "JR for 12": {"JR":0.3, "JS":0.15, "HA":0.0375, "DR":0.0375},
+  "JR for 23": {"JR":0.3, "JS":0.15, "HA":0.0375, "DR":0.0375},
+  "JR for team": {"JR":0.1, "JS":0.05, "HA":0.0125, "DR":0.0125},
 
-    "HA for 1": {"HA":0.5, "OD":0.1, "DR":0.4},
-    "HA for 12": {"HA":0.375, "OD":0.075, "DR":0.3},
-    "HA for 123": {"HA":0.2, "OD":0.04, "DR": 0.16},
+  "OD for 1": {"OD":0.5, "HA":0.05, "DR":0.05, "ID":0.1},
+  "OD for 12": {"OD":0.375, "HA":0.0375, "DR":0.0375, "ID":0.075},
+  "OD for 123": {"OD":0.2, "HA":0.02, "DR":0.02, "ID":0.04},
 
-    "DR for 12": {"JS":0.4, "DR":0.5, "HA":0.4},
-    "DR for 34": {"JS":0.2, "DR":0.5, "HA":0.4, "IS":0.2},
-    "DR for team": {"JS":0.088, "DR":0.22, "HA":0.176, "IS":0.088},
+  "HA for 1": {"HA":0.5, "OD":0.1, "DR":0.4},
+  "HA for 12": {"HA":0.375, "OD":0.075, "DR":0.3},
+  "HA for 123": {"HA":0.2, "OD":0.04, "DR": 0.16},
 
-    "PA for 1": {"HA": 0.16, "DR": 0.16, "PA":0.6},
-    "PA for 12": {"HA": 0.12, "DR": 0.12, "PA":0.45},
-    "PA for team": {"HA": 0.04, "DR": 0.04, "PA":0.15},
+  "DR for 12": {"JS":0.4, "DR":0.5, "HA":0.4},
+  "DR for 34": {"JS":0.2, "DR":0.5, "HA":0.4, "IS":0.2},
+  "DR for team": {"JS":0.088, "DR":0.22, "HA":0.176, "IS":0.088},
 
-    "IS for 5": {"IS":0.5, "JS":0.1, "ID": 0.05},
-    "IS for 45": {"IS":0.375, "JS":0.075, "ID": 0.038},
-    "IS for 345": {"IS":0.2, "JS":0.04, "ID": 0.02},
+  "PA for 1": {"HA": 0.16, "DR": 0.16, "PA":0.6},
+  "PA for 12": {"HA": 0.12, "DR": 0.12, "PA":0.45},
+  "PA for team": {"HA": 0.04, "DR": 0.04, "PA":0.15},
 
-    "ID for 5": {"ID":0.5, "IS":0.05, "SB": 0.1},
-    "ID for 45": {"ID":0.375, "IS":0.0375, "SB": 0.075},
-    "ID for 345": {"ID":0.2, "IS":0.02, "SB": 0.04},
+  "IS for 5": {"IS":0.5, "JS":0.1, "ID": 0.05},
+  "IS for 45": {"IS":0.375, "JS":0.075, "ID": 0.038},
+  "IS for 345": {"IS":0.2, "JS":0.04, "ID": 0.02},
 
-    "RB for 45": {"RB":0.5, "ID":0.05, "IS": 0.05},
-    "RB for team": {"RB":0.22, "ID":0.022, "IS": 0.02},
+  "ID for 5": {"ID":0.5, "IS":0.05, "SB": 0.1},
+  "ID for 45": {"ID":0.375, "IS":0.0375, "SB": 0.075},
+  "ID for 345": {"ID":0.2, "IS":0.02, "SB": 0.04},
 
-    "SB for 5": {"SB":0.5, "ID":0.2, "RB": 0.1},
-    "SB for 45": {"SB":0.375, "ID":0.15, "RB": 0.075},
-    "SB for 345": {"SB":0.2, "ID":0.08, "RB": 0.04},
+  "RB for 45": {"RB":0.5, "ID":0.05, "IS": 0.05},
+  "RB for team": {"RB":0.22, "ID":0.022, "IS": 0.02},
+
+  "SB for 5": {"SB":0.5, "ID":0.2, "RB": 0.1},
+  "SB for 45": {"SB":0.375, "ID":0.15, "RB": 0.075},
+  "SB for 345": {"SB":0.2, "ID":0.08, "RB": 0.04},
 }
 #Habilitat que marca el coeficient de cross training per a cada tipus d'entrenament
 PRIMARY_SKILL = {
+    "None": "PA",
     "JS for 12": "JS",
     "JS for 34": "JS",
     "JS for 23": "JS",
@@ -249,7 +252,7 @@ def training_plan(playerid: str, start_week: int, training_plan: list, coach_lev
     weekly_skills[simulated] = train_skill(weekly_skills[simulated-1], training_plan[simulated-1], age, player['height'], coach_level)
     #print(f"Setmana {week}, edat {age}: ", weekly_skills[simulated], "\n")
 
-  return weekly_skills
+  return weekly_skills[simulated], age, player['first_name'], player['last_name']
 
 
 # DEBUG

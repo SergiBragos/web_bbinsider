@@ -76,7 +76,7 @@
       </div>
 
     </div>
-    
+    <br><br>
     <h3>Entrenament</h3>
     <div id="training-screen">
       <div class="container">
@@ -89,12 +89,14 @@
             <option selected>4</option>
             <option>5</option><option>6</option><option>7</option>
         </select><br><br>
+        <label>Training duration (weeks)</label>
+        <input id="training-duration" value="14" max="28"><br><br>
 
         <label>Setmana actual (1 - 14)</label>
-        <input id="current_week" type="number" min="1" max="14"><br><br>
+        <input id="current_week" type="number" min="1" max="14" required="true"><br><br>
 
         <h3>Training plan</h3>
-        <div id="plan"></div>
+        <div id="plan" class="training-grid"></div>
 
         <button id="training-btn">Simular</button>
 
