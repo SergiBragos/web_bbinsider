@@ -226,20 +226,39 @@ const trainings = [
 ];
 const trainingBtn = document.getElementById("training-btn");
 const planDiv = document.getElementById("plan");
-const trainingDuration = document.getElementById("training-duration");
 
 trainingBtn.addEventListener("click", runTraining);
 
 for (let i = 0; i < 28; i++) {
-    const sel = document.createElement("select");
-    trainings.forEach(t => {
-        const o = document.createElement("option");
-        o.text = t;
-        sel.add(o);
-    });
-    planDiv.append(document.createElement("br"));
-    planDiv.append(`Week ${i+1}: `);
-    planDiv.append(sel);
+  const row = document.createElement("div");
+  row.className = "training-element"
+  const label = document.createElement("span");
+  label.textContent = `Week ${i + 1}: `;
+
+  const sel = document.createElement("select");
+  trainings.forEach(t => {
+    const o = document.createElement("option");
+    o.value = t;
+    o.textContent = t;
+    sel.appendChild(o);
+  });
+
+  const copyBtn = document.createElement("button");
+  copyBtn.textContent = "Copy";
+  copyBtn.type = "button";
+  copyBtn.onclick = () => {
+    copiedTraining = sel.value;
+  };
+
+  const pasteBtn = document.createElement("button");
+  pasteBtn.textContent = "Paste";
+  pasteBtn.type = "button";
+  pasteBtn.onclick = () => {
+    if (copiedTraining) sel.value = copiedTraining;
+  };
+
+  row.append(label, sel, copyBtn, pasteBtn);
+  planDiv.appendChild(row);
 }
 
 async function runTraining() {
@@ -260,6 +279,82 @@ async function runTraining() {
     const res = await fetch(url);
     const data = await res.json();
 
-    document.getElementById("output").textContent =
-        JSON.stringify(data, null, 2);
+    renderTrainingResult(data)
+}
+
+function renderTrainingResult(data) {
+    const output = document.getElementById("output");
+    output.innerHTML = ""; // neteja prèvia
+
+    // 🔹 Títol jugador
+    const title = document.createElement("h3");
+    title.textContent = `${data.name} ${data.surname} (Edat: ${data.age_at_end})`;
+    output.appendChild(title);
+
+    // 🔹 Taula
+    const table = document.createElement("table");
+    table.className = "skills-table";
+
+    const thead = document.createElement("thead");
+    thead.innerHTML = `
+        <tr>
+            <th>Skill</th>
+            <th>Valor</th>
+            <th>Diferència</th>
+        </tr>
+    `;
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+
+    for (const [skill, value] of Object.entries(data.skills_by_week)) {
+      const tr = document.createElement("tr");
+
+      const tdSkill = document.createElement("td");
+      tdSkill.textContent = skill;
+
+      const tdValue = document.createElement("td");
+      tdValue.textContent = value.toFixed(2);
+      tdValue.style.color = getSkillColor(value);
+      tdValue.style.fontWeight = "bold";
+
+      const tdDifference = document.createElement("td");
+      tdDifference.textContent = (value - data.initial_skills[skill]).toFixed(2)
+
+      tr.appendChild(tdSkill);
+      tr.appendChild(tdValue);
+      tr.appendChild(tdDifference);
+      tbody.appendChild(tr);
+    }
+
+    table.appendChild(tbody);
+    output.appendChild(table);
+}
+
+//Funció que pinta el text d'una habilitat segons el color de BB
+const SKILL_LEVELS = 
+  {1: "#000000",
+  2: "#121263",
+  3: "#221385",
+  4: "#30139F",
+  5: "#700BA2",
+  6: "#910B9D",
+  7: "#AD0B88",
+  8: "#B70B5A",
+  9: "#9C0B32",
+  10: "#A70B00",
+  11: "#BD2600",
+  12: "#CB3100",
+  13: "#D93C00",
+  14: "#DB6E04",
+  15: "#E5A64B",
+  16: "#AC860A",
+  17: "#8E9800",
+  18: "#498E00",
+  19: "#0EAE28",
+  20: "#0EB366"
+};
+function getSkillColor(value) {
+    const level = Math.max(1, Math.min(20, Math.floor(value)));
+    return SKILL_LEVELS[level];
 }

@@ -252,7 +252,7 @@ def training_plan(playerid: str, start_week: int, training_plan: list, coach_lev
     weekly_skills[simulated] = train_skill(weekly_skills[simulated-1], training_plan[simulated-1], age, player['height'], coach_level)
     #print(f"Setmana {week}, edat {age}: ", weekly_skills[simulated], "\n")
 
-  return weekly_skills[simulated], age, player['first_name'], player['last_name']
+  return weekly_skills[simulated], age, player['first_name'], player['last_name'], weekly_skills[0]
 
 
 # DEBUG

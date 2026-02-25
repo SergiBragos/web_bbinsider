@@ -74,7 +74,6 @@ def progress_batch(match_ids: str):
 def api_schedule(teamid: str = Query(...), season: str = Query(...)):
     xml_text = bbapi.get_xml_schedule(teamid, season)
     root = xml.fromstring(xml_text)
-
     matches = []
 
     for m in root.findall("./schedule/match"):
@@ -96,7 +95,7 @@ def training(
 ):
     training_list = plan.split("|")
 
-    result, age, name, surname = training_plan(
+    result, age, name, surname, initial_skills = training_plan(
         playerid=player_id,
         start_week=current_week,
         training_plan=training_list,
@@ -111,5 +110,6 @@ def training(
         "coach_level": coach_level,
         "start_week": current_week,
         "weeks": len(training_list),
-        "skills_by_week": result
+        "skills_by_week": result,
+        "initial_skills": initial_skills
     }

@@ -95,7 +95,7 @@ h3{
   background: rgb(219, 219, 219);
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 6px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 6px 6px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -249,10 +249,17 @@ Targetes dels partits
 /* -----------------------------
 Caselles de l'entrenament
 ------------------------------ */
+.training-element {
+  background-color: rgba(226, 122, 24, 0.7);
+  box-shadow: 2px 2px rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  padding: 6px;
+  margin: 2px;
+}
 
 .training-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(7, 1fr);
   gap: 6px;
   max-width: 100%;
 }
@@ -267,6 +274,37 @@ Caselles de l'entrenament
   font-weight: bold;
   margin-bottom: 2px;
   text-align: center;
+}
+
+.skills-table {
+    border-collapse: collapse;
+    margin-top: 10px;
+    min-width: 250px;
+}
+
+.skills-table th,
+.skills-table td {
+    border: 1px solid #adadad;
+    padding: 6px 10px;
+    text-align: left;
+}
+
+.skills-table th {
+  background-color: #747474;
+}
+
+.skills-table tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.skills-table tr:nth-child(odd) {
+  color: #000000;
+}
+
+#output{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 @media (max-width: 780px) {
