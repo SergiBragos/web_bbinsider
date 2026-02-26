@@ -12,13 +12,15 @@ from core.match_processor import ensure_match_processed
 from bbapi import BBApi
 from core.progress_store import (init_match, update_match, finish_match, get_global_progress)
 from typing import Dict
-import password
+import os
 
-
+#Crear l'app i enviar-li les credencials de l'usuari
 app = FastAPI()
-bbapi = BBApi(password.user, password.password)
-
+BB_USER = os.environ["BB_USER"]
+BB_PASSWORD = os.environ["BB_PASSWORD"]
+bbapi = BBApi(BB_USER, BB_PASSWORD)
 app.mount("/web", StaticFiles(directory="web"), name="web")
+
 
 @app.get("/")
 def index():
@@ -44,11 +46,12 @@ def get_shotmap(match_ids: str, team: str, show_individual_shots: bool = False, 
     for mid in match_list:
         ensure_match_processed(mid.strip(), team)
 
-    output = "tmp/shotmap.png"
+    output = Path("tmp")
+    output.mkdir(exist_ok=True)
 
     zone_stats, assisted = shotmap(match_ids=match_list, team=team, player=player, output_path=output, show_individual_shots=show_individual_shots, show=False)
 
-    return FileResponse(output, media_type="image/png")
+    return FileResponse(output/"shotmap.png", media_type="image/png")
 
 @app.get("/assisted")
 def get_assisted(match_ids: str,team: str,player: str | None = None):
