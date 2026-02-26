@@ -6,8 +6,8 @@ from team import Team
 from player import Player
 from stats import *
 from os.path import exists
-import password
 import math
+import os
 
 BB_SKILL_MAP = {
     "jumpShot": "JS",
