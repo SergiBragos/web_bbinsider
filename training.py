@@ -231,13 +231,13 @@ def training_plan(api, playerid: str, start_week: int, training_plan: list, coac
     weekly_skills[simulated][key] = player["skills"][key] + bonus[key]
 
   #Dades inicials del jugador
-  print(
-    f"\nName: {player['first_name']} {player['last_name']} "
-    f"|| salary: {player['salary']} $ "
-    f"|| pot: {player['potential']} "
-    f"|| age: {player['age']} years "
-    f"|| height: {player['height']} cm\n\n"
-    f"Habilitats inicials: {weekly_skills[0]}\n")
+  #print(
+    #f"\nName: {player['first_name']} {player['last_name']} "
+    #f"|| salary: {player['salary']} $ "
+    #f"|| pot: {player['potential']} "
+    #f"|| age: {player['age']} years "
+    #f"|| height: {player['height']} cm\n\n"
+    #f"Habilitats inicials: {weekly_skills[0]}\n")
 
   while simulated < len(training_plan):
     simulated += 1
@@ -257,7 +257,7 @@ if __name__ == "__main__":
 
   bonus = {'JS': 0.22, 'JR': 0.5, 'OD': 0.35, 'HA': 0.57, 'DR': 0.12, 'PA': 0.5, 'IS': 0.18, 'ID': 0.38, 'RB': 0.0, 'SB': 0.5, 'FT': 0.0, 'ST': 0.0}
 
-  print(training_plan(playerid="54646103",
+  print(training_plan(api = "", playerid="54646103",
                       start_week=5,
                       horizon=23,
                       coach_level=4,

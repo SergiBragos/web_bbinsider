@@ -4,9 +4,9 @@ import xml.etree.ElementTree as xml
 from pprint import pprint
 from team import Team
 from player import Player
-from stats import *
+from stats import Statistic
 from os.path import exists
-import Path
+from pathlib import Path
 
 BB_SKILL_MAP = {
     "jumpShot": "JS",
@@ -101,9 +101,9 @@ class BBApi:
 
     def get_xml_boxscore(self, matchid) -> str:
 
-        path = f"teams/boxscore_{matchid}.xml"
+        path = self.teams_dir/f"boxscore_{matchid}.xml"
 
-        if exists(path):
+        if path.exists():
             with open(path, mode="r", encoding='utf-8') as f:
                 return f.read()
         else:
@@ -117,9 +117,9 @@ class BBApi:
 
     def get_xml_standings(self, leagueid: int, season: int) -> str:
 
-        path = f"teams/standings_{leagueid}_{season}.xml"
+        path = self.teams_dir/f"standings_{leagueid}_{season}.xml"
 
-        if exists(path):
+        if path.exists():
             with open(path, mode="r", encoding='utf-8') as f:
                 return f.read()
         else:
