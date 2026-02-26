@@ -1,8 +1,6 @@
 #training.py
 
 import math
-from bbapi import BBApi
-import password
 
 MAIN_SKILLS = ["JS", "JR", "OD", "HA", "DR", "PA", "IS", "ID", "RB", "SB"]
 
