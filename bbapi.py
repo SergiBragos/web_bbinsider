@@ -6,8 +6,7 @@ from team import Team
 from player import Player
 from stats import *
 from os.path import exists
-import math
-import os
+import Path
 
 BB_SKILL_MAP = {
     "jumpShot": "JS",
@@ -47,6 +46,15 @@ class BBApi:
         self.password = password
         self.logged_in = False
         self.network = Network()
+        
+        #Creant els directoris si encara no existien
+        self.base_dir = Path(".")
+        self.teams_dir = self.base_dir / "teams"
+        self.matches_dir = self.base_dir / "matches"
+        self.players_dir = self.base_dir / "players"
+        self.tmp_dir = self.base_dir / "tmp"
+        for d in [self.teams_dir, self.matches_dir, self.players_dir, self.tmp_dir]:
+            d.mkdir(exist_ok=True)
 
         p = {"login": self.login, "code": self.password}
         data = self.network.first_get("http://bbapi.buzzerbeater.com/login.aspx", p)
@@ -60,7 +68,7 @@ class BBApi:
                 raise RuntimeError(f"BBAPI login error: {child.attrib['message']}")
 
         if not self.logged_in:
-            raise RuntimeError("Login BBAPI fallit")
+            raise RuntimeError("Login BBAPI failed")
 
     def arena(self, teamid=0):
         p = {"teamid": teamid}
@@ -125,11 +133,7 @@ class BBApi:
 
     #Va a buscar els partits a l'enllaç http://bbapi.buzzerbeater.com/schedule.aspx, amb team_id i season.
     def get_xml_schedule(self, teamid, season) -> str:
-        path = f"teams/schedule_{teamid}_{season}.xml"
-
-        #if exists(path):
-        #    with open(path, mode="r", encoding="utf-8") as f:
-        #        return f.read()
+        path = self.teams_dir / f"schedule_{teamid}_{season}.xml"
 
         p = {"teamid": teamid, "season": season}
         text = self.network.get("http://bbapi.buzzerbeater.com/schedule.aspx", p)
