@@ -1,8 +1,11 @@
 from PIL import Image, ImageDraw
-
+from pathlib import Path
 
 class ShotChart:
     def __init__(self) -> None:
+        self.base_dir = Path(".")
+        self.tmp_dir = self.base_dir / "tmp"
+        self.tmp_dir.mkdir(exist_ok=True)
         self.img = Image.open("court.png")
         self.img_draw = ImageDraw.Draw(self.img)
 

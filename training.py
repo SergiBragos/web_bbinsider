@@ -214,7 +214,7 @@ def training_plan(api, playerid: str, start_week: int, training_plan: list, coac
   try:
     player = api.player_all_data(playerid)
   except Exception as e:
-    return {"error": str(e)}
+    raise RuntimeError(f"training_plan error: {e}")
   
   age = player["age"]
   height = player["height"]
