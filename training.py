@@ -212,8 +212,7 @@ def mmult(list1: list, list2: list):
 
 
 # FUNCIONS PRINCIPALS
-def training_plan(playerid: str, start_week: int, training_plan: list, coach_level: int=4, bonus: dict={"JS": 0, "JR": 0, "OD": 0, "HA": 0, "DR": 0, "PA": 0, "IS": 0, "ID": 0, "RB": 0, "SB":0, "FT":0, "ST":0}):
-  api = BBApi(password.user, password.password)
+def training_plan(api, playerid: str, start_week: int, training_plan: list, coach_level: int=4, bonus: dict={"JS": 0, "JR": 0, "OD": 0, "HA": 0, "DR": 0, "PA": 0, "IS": 0, "ID": 0, "RB": 0, "SB":0, "FT":0, "ST":0}):
   try:
     player = api.player_all_data(playerid)
   except Exception as e:

@@ -91,6 +91,7 @@ def api_schedule(teamid: str = Query(...), season: str = Query(...)):
 
 @app.get("/training")
 def training(
+    api = bbapi,
     player_id: str = Query(...),
     coach_level: int = Query(...),
     current_week: int = Query(...),
