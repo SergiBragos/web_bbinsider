@@ -100,6 +100,7 @@ def training(
     training_list = plan.split("|")
 
     result, age, name, surname, initial_skills = training_plan(
+        api,
         playerid=player_id,
         start_week=current_week,
         training_plan=training_list,
