@@ -115,7 +115,7 @@ button.submit {
   padding: 3px;
 }
 
-.submit {
+.submit, #training-btn {
   margin-top: 8px;
   background: #33a538;
   color: white;
@@ -124,7 +124,7 @@ button.submit {
   text-size-adjust: 6px;
 }
 
-.submit:hover {
+.submit:hover, #training-btn:hover {
   background: #1b5e20;
 }
 
@@ -267,13 +267,18 @@ Caselles de l'entrenament
 .training-cell {
   display: flex;
   flex-direction: column;
-  font-size: 12px;
+  font-size: 10px;
 }
 
 .training-cell label {
   font-weight: bold;
   margin-bottom: 2px;
   text-align: center;
+}
+
+#training-btn {
+  max-width: 50%;
+  padding: 2px;
 }
 
 .skills-table {
@@ -307,9 +312,16 @@ Caselles de l'entrenament
   align-items: center;
 }
 
-@media (max-width: 780px) {
+@media (max-width: 750px) {
   #shots-screen {
     flex-direction: column;
+  }
+
+  .training-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    max-width: 100%;
   }
 
   #sidebar {
