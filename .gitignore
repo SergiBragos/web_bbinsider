@@ -16,9 +16,6 @@ tmp/
 matches/
 teams/
 
-# Matplotlib / imatges generades
-*.png
-
 # VS Code
 .vscode/
 
