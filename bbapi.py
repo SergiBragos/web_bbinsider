@@ -137,9 +137,10 @@ class BBApi:
 
         p = {"teamid": teamid, "season": season}
         text = self.network.get("http://bbapi.buzzerbeater.com/schedule.aspx", p)
+        #debugar text per veure quina pinta té
+        print("El resultat de la variable text és: ", text)
 
         if "<schedule" not in text:
-            print(text)
             raise RuntimeError("Resposta schedule NO conté <schedule>")
 
         with open(path, mode="w", encoding="utf-8") as f:
