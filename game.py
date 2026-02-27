@@ -327,6 +327,9 @@ class Game:
             assert bbteams[1] == self.teams[0]
 
     def save(self, filename):
+        filename = Path(filename)
+        tmp_file = filename.with_suffix(filename.suffix + ".tmp")
+
         teams = []
         for tid, team in enumerate(self.teams):
             players = []
@@ -353,9 +356,7 @@ class Game:
             t = {"id": team.id, "name": team.name, "players": players, "stats": stats}
             teams.append(t)
 
-        events = []
-        for event in self.baseevents:
-            events.append(event.to_json())
+        events = [event.to_json() for event in self.baseevents]
 
         game = {
             "teamHome": teams[0],
@@ -363,8 +364,11 @@ class Game:
             "events": events,
         }
 
-        with open(filename, "w", encoding='utf-8') as f:
+        # ✨ ESCRIPTURA ATÒMICA ✨
+        with open(tmp_file, "w", encoding="utf-8") as f:
             json.dump(game, f, indent=4, ensure_ascii=False)
+
+        tmp_file.replace(filename)
 
 
 class Possessions(Extension):

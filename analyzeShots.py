@@ -50,16 +50,20 @@ SHOT_KEY = {
       '410': "DUNK2"
   }
 
-playerMap = {
-      "home": {},
-      "away": {}
-  }
 
-  # Home team
   
 def analyze_shots(game_id):
   
+  playerMap = {"home": {},"away": {}}
+
   input_file = Path(f"./matches/{game_id}/game.json")
+
+  if not input_file.exists():
+    raise RuntimeError(f"❌ game.json no existeix per {game_id}")
+
+  if input_file.stat().st_size == 0:
+    raise RuntimeError(f"❌ game.json buit per {game_id}")
+
   with input_file.open(encoding="utf8") as f:
     data = json.load(f)
 

@@ -55,9 +55,13 @@ def ensure_match_processed(matchid: str, team: str):
     game.play()
 
     # 4️⃣ Save game.json
-    #print(f"Guardant partit {matchid}")
     update_match(matchid, 70)
-    game.save(matches_dir / "game.json")
+
+    tmp_path = matches_dir / "game.json.tmp"
+    final_path = matches_dir / "game.json"
+
+    game.save(tmp_path)
+    tmp_path.replace(final_path)
 
     # 5️⃣ Analyze shots
     #print("Obrint AnalyzeShots.py del partit {matchid}")
